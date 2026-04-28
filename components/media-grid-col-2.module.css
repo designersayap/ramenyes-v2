@@ -1,0 +1,93 @@
+.container {
+    width: 100%;
+    position: relative;
+    padding: var(--padding-lg) 0;
+    container-type: inline-size;
+}
+
+/* mediaGrid is now inside .container-grid (via BuilderSection innerContainer) */
+:global(.container-grid) .mediaGrid {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+:global(.container-grid) .mediaGrid[data-full-width="true"] {
+    max-width: 100% !important;
+}
+
+:global(.container-grid) .mediaGrid .itemWrapper {
+    flex: 0 0 50% !important;
+    /* 50% for 2 columns */
+    width: 50% !important;
+    max-width: 50% !important;
+    transition: opacity 0.3s ease;
+    padding: var(--padding-xs);
+    box-sizing: border-box;
+}
+
+/* Marquee Support */
+:global(.container-grid) .mediaGrid.marquee {
+    flex-wrap: nowrap !important;
+    width: max-content !important;
+    max-width: none !important;
+    justify-content: flex-start !important;
+    animation: marquee var(--marquee-duration, 60s) linear infinite;
+    contain: paint;
+}
+
+:global(.container-grid) .mediaGrid.marquee[data-paused="true"] {
+    animation-play-state: paused;
+}
+
+:global(.container-grid) .mediaGrid.marquee[data-direction="ltr"] {
+    animation-direction: reverse;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(calc(-100% / var(--marquee-repeat-count, 3)));
+    }
+}
+
+@container (max-width: 767px) {
+    :global(.container-grid) .mediaGrid:not(.marquee) .itemWrapper {
+        flex: 0 0 50% !important;
+        /* Force 2 per row even on mobile */
+        width: 50% !important;
+        max-width: 50% !important;
+    }
+
+    :global(.container-grid) .mediaGrid.marquee .itemWrapper {
+        flex: 0 0 50% !important;
+        /* Keep items at 50% width in marquee mode on mobile too */
+        width: 50% !important;
+        max-width: 50% !important;
+    }
+}
+
+
+.image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--border-radius-md);
+    object-fit: cover;
+}
+
+.imageWrapper {
+    width: 100%;
+    min-width: 100px;
+    position: relative;
+    overflow: clip;
+    overflow-clip-margin: 40px;
+    border-radius: var(--border-radius-md);
+}

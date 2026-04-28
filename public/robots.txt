@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /_next/static/
+Disallow: /_next/
+Disallow: /api/
+
+Sitemap: https://berkah-umroh.sabunkrimekonomi.id/sitemap.xml
