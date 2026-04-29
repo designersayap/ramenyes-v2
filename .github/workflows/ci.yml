@@ -1,0 +1,354 @@
+name: deploy smu-lunar-sabunkrimekonomi-web
+
+on:
+  push:
+    branches:
+      - dev
+      - uat
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Image tag for production deploy'
+        required: false
+        default: 'latest'
+
+env:
+  AWS_REGION: ap-southeast-3
+  REPO_NAME: ${{ github.event.repository.name }}
+
+jobs:
+  setup-environment:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.set-env.outputs.environment }}
+      ecr-registry: ${{ steps.set-env.outputs.ecr-registry }}
+      aws-role: ${{ steps.set-env.outputs.aws-role }}
+      use-role: ${{ steps.set-env.outputs.use-role }}
+      image-tag: ${{ steps.set-env.outputs.image-tag }}
+      ecs-cluster: ${{ steps.set-env.outputs.ecs-cluster }}
+      ecs-service: ${{ steps.set-env.outputs.ecs-service }}
+      ecs-task-definition: ${{ steps.set-env.outputs.ecs-task-definition }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set environment variables
+        id: set-env
+        run: |
+          # Common base names
+          BASE_SERVICE_NAME="smu-berkahekonomi"
+          
+          ## Branch-specific configuration
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            ENV="dev"
+            echo "environment=$ENV" >> $GITHUB_OUTPUT
+            echo "ecr-registry=430118853482.dkr.ecr.ap-southeast-3.amazonaws.com" >> $GITHUB_OUTPUT
+            echo "aws-role=arn:aws:iam::430118853482:role/smu-cicd-website-production" >> $GITHUB_OUTPUT
+            echo "use-role=true" >> $GITHUB_OUTPUT
+          
+            # Dev-specific resources
+            echo "ecs-cluster=${ENV}-" >> $GITHUB_OUTPUT
+            echo "ecs-service=${BASE_SERVICE_NAME}" >> $GITHUB_OUTPUT
+            echo "ecs-task-definition=${BASE_SERVICE_NAME}-${ENV}" >> $GITHUB_OUTPUT
+          
+            ## Image tag for dev
+            GIT_HASH=$(git rev-parse --short HEAD)
+            echo "image-tag=${ENV}-${GIT_HASH}" >> $GITHUB_OUTPUT
+          
+          elif [[ "${{ github.ref }}" == "refs/heads/uat" ]]; then
+            ENV="uat"
+            echo "environment=$ENV" >> $GITHUB_OUTPUT
+            echo "ecr-registry=430118853482.dkr.ecr.ap-southeast-3.amazonaws.com" >> $GITHUB_OUTPUT
+            echo "aws-role=arn:aws:iam::430118853482:role/smu-cicd-website-production" >> $GITHUB_OUTPUT
+            echo "use-role=true" >> $GITHUB_OUTPUT
+          
+            # UAT-specific resources
+            echo "ecs-cluster=${ENV}-${BASE_SERVICE_NAME}" >> $GITHUB_OUTPUT
+            echo "ecs-service=${BASE_SERVICE_NAME}-fe" >> $GITHUB_OUTPUT
+            echo "ecs-task-definition=${BASE_SERVICE_NAME}-fe-uat" >> $GITHUB_OUTPUT
+          
+            # Image tag for uat
+            GIT_HASH=$(git rev-parse --short HEAD)
+            echo "image-tag=${ENV}-${GIT_HASH}" >> $GITHUB_OUTPUT
+          
+          elif [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            ENV="prod"
+            echo "environment=prod" >> $GITHUB_OUTPUT
+            echo "ecr-registry=430118853482.dkr.ecr.ap-southeast-3.amazonaws.com" >> $GITHUB_OUTPUT
+            echo "aws-role=arn:aws:iam::430118853482:role/smu-cicd-website-production" >> $GITHUB_OUTPUT
+            echo "use-role=true" >> $GITHUB_OUTPUT
+          
+            # Production-specific resources
+            echo "ecs-cluster=${ENV}-${BASE_SERVICE_NAME}" >> $GITHUB_OUTPUT
+            echo "ecs-service=${BASE_SERVICE_NAME}-fe" >> $GITHUB_OUTPUT
+            echo "ecs-task-definition=${BASE_SERVICE_NAME}-fe-uat" >> $GITHUB_OUTPUT
+          
+            # Image tag for prod
+            IMAGE_TAG="${{ github.event.inputs.image_tag }}"
+            if [[ -z "$IMAGE_TAG" || "$IMAGE_TAG" == "latest" ]]; then
+              VERSION=$(jq -r '.version' package.json)
+              IMAGE_TAG="$VERSION"
+            fi
+            echo "image-tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Error: Unknown branch or trigger"
+            exit 1
+          fi
+          
+          # Summary output for debugging
+          echo "================================================"
+          echo "🔧 Environment Configuration Set"
+          echo "================================================"
+          echo "Environment: $(grep 'environment=' <<< "$GITHUB_OUTPUT" | cut -d'=' -f2)"
+          echo "ECS Cluster: $(grep 'ecs-cluster=' <<< "$GITHUB_OUTPUT" | cut -d'=' -f2)"
+          echo "ECS Service: $(grep 'ecs-service=' <<< "$GITHUB_OUTPUT" | cut -d'=' -f2)"
+          echo "Task Definition: $(grep 'ecs-task-definition=' <<< "$GITHUB_OUTPUT" | cut -d'=' -f2)"
+          echo "Image Tag: $(grep 'image-tag=' <<< "$GITHUB_OUTPUT" | cut -d'=' -f2)"
+          echo "================================================"
+
+  build-and-deploy:
+    needs: setup-environment
+    runs-on: ubuntu-latest
+    environment: ${{ needs.setup-environment.outputs.environment }}
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Configure AWS credentials
+        if: needs.setup-environment.outputs.use-role == 'true'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ needs.setup-environment.outputs.aws-role }}
+          role-session-name: GitHubActions-${{ github.run_id }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | \
+            docker login --username AWS --password-stdin ${{ needs.setup-environment.outputs.ecr-registry }}
+
+      #- name: Create .env file from Secrets Manager
+      #  run: |
+      #    ENV=${{ needs.setup-environment.outputs.environment }}
+      #    REPO_NAME=${{ env.REPO_NAME }}
+      #    if [[ "$ENV" == "dev" || "$ENV" == "uat" ]]; then
+      #      SECRET_NAME="/ecs/$REPO_NAME/$ENV"
+      #    else
+      #      SECRET_NAME="/ecs/$REPO_NAME/prod"
+      #    fi
+      #    touch .env
+      #    aws secretsmanager get-secret-value \
+      #      --secret-id "$SECRET_NAME" \
+      #      --query 'SecretString' \
+      #      --output text \
+      #      --region '${{ env.AWS_REGION }}' | \
+      #    jq -r 'to_entries[] | "\(.key)=\(.value)"' >> .env
+      #    echo "✓ Successfully created .env file for $ENV environment"
+      #    echo "Total environment variables: $(wc -l < .env)"
+      #    if [[ "$ENV" == "dev" ]]; then
+      #      echo "----- .env content (dev branch only) -----"
+      #      cat .env
+      #      echo "------------------------------------------"
+      #    fi
+
+      - name: Build Docker image
+        env:
+          NPM_GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
+          ECR_REGISTRY: ${{ needs.setup-environment.outputs.ecr-registry }}
+          IMAGE_TAG: ${{ needs.setup-environment.outputs.image-tag }}
+        run: |
+          FULL_IMAGE_TAG="${ECR_REGISTRY}/smu-berkahekonomi-fe:${IMAGE_TAG}"
+          
+          echo "================================================"
+          echo "🐳 Building Docker Image"
+          echo "================================================"
+          echo "Image: $FULL_IMAGE_TAG"
+          echo "Build Args: NPM_GITHUB_TOKEN=***"
+          echo "================================================"
+          
+          docker build \
+            --build-arg NPM_GITHUB_TOKEN=$NPM_GITHUB_TOKEN \
+            --label "org.opencontainers.image.created=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+            --label "org.opencontainers.image.revision=${{ github.sha }}" \
+            --label "org.opencontainers.image.version=${IMAGE_TAG}" \
+            --label "org.opencontainers.image.source=${{ github.repositoryUrl }}" \
+            -t $FULL_IMAGE_TAG \
+            .
+          
+          echo "FULL_IMAGE_TAG=$FULL_IMAGE_TAG" >> $GITHUB_ENV
+          echo "✅ Build completed successfully"
+
+      - name: Push Docker image to ECR
+        run: |
+          echo "================================================"
+          echo "📦 Pushing Docker Image to ECR"
+          echo "================================================"
+          echo "Image: $FULL_IMAGE_TAG"
+          echo "================================================"
+          
+          docker push $FULL_IMAGE_TAG
+          
+          echo "✅ Push completed successfully"
+
+      - name: Verify ECS Task Definition exists
+        env:
+          CI_AWS_ECS_TASK_DEFINITION: ${{ needs.setup-environment.outputs.ecs-task-definition }}
+        run: |
+          echo "================================================"
+          echo "🔍 Verifying ECS Task Definition"
+          echo "================================================"
+          echo "Task Definition: $CI_AWS_ECS_TASK_DEFINITION"
+          echo "================================================"
+          
+          # Check if task definition exists
+          if aws ecs describe-task-definition \
+            --task-definition "$CI_AWS_ECS_TASK_DEFINITION" \
+            --region ${{ env.AWS_REGION }} > /dev/null 2>&1; then
+            echo "✅ Task definition '$CI_AWS_ECS_TASK_DEFINITION' exists"
+          
+            # Get current revision
+            CURRENT_REVISION=$(aws ecs describe-task-definition \
+              --task-definition "$CI_AWS_ECS_TASK_DEFINITION" \
+              --region ${{ env.AWS_REGION }} \
+              --query 'taskDefinition.revision' \
+              --output text)
+            echo "Current Revision: $CURRENT_REVISION"
+          else
+            echo "⚠️  Task definition '$CI_AWS_ECS_TASK_DEFINITION' does not exist yet"
+            echo "It will be created during deployment"
+          fi
+
+      - name: Deploy to ECS
+        env:
+          DOCKER_REGISTRY: ${{ needs.setup-environment.outputs.ecr-registry }}
+          IMAGE_NAME: smu-berkahekonomi-fe
+          CI_AWS_ECS_CLUSTER: ${{ needs.setup-environment.outputs.ecs-cluster }}
+          CI_AWS_ECS_SERVICE: ${{ needs.setup-environment.outputs.ecs-service }}
+          CI_AWS_ECS_TASK_DEFINITION: ${{ needs.setup-environment.outputs.ecs-task-definition }}
+          VERSION: ${{ needs.setup-environment.outputs.image-tag }}
+          ENVIRONMENT: ${{ needs.setup-environment.outputs.environment }}
+        run: |
+          echo "================================================"
+          echo "🚀 Deploying to ECS - $ENVIRONMENT Environment"
+          echo "================================================"
+          echo "Cluster:            $CI_AWS_ECS_CLUSTER"
+          echo "Service:            $CI_AWS_ECS_SERVICE"
+          echo "Task Definition:    $CI_AWS_ECS_TASK_DEFINITION"
+          echo "Docker Registry:    $DOCKER_REGISTRY"
+          echo "Image Name:         $IMAGE_NAME"
+          echo "Image Tag:          $VERSION"
+          echo "Full Image:         $DOCKER_REGISTRY/$IMAGE_NAME:$VERSION"
+          echo "Deployed By:        ${{ github.actor }}"
+          echo "Commit SHA:         ${{ github.sha }}"
+          echo "Workflow Run:       ${{ github.run_id }}"
+          echo "================================================"
+          
+          # Make ECS script executable
+          chmod +x ci/bin/ecs
+          
+          # Execute deployment
+          ./ci/bin/ecs update-task-definition
+          
+          echo "================================================"
+          echo "✅ Deployment to $ENVIRONMENT completed successfully!"
+          echo "================================================"
+
+      - name: Post-deployment verification
+        if: success()
+        env:
+          CI_AWS_ECS_CLUSTER: ${{ needs.setup-environment.outputs.ecs-cluster }}
+          CI_AWS_ECS_SERVICE: ${{ needs.setup-environment.outputs.ecs-service }}
+        run: |
+          echo "================================================"
+          echo "🔍 Post-Deployment Verification"
+          echo "================================================"
+          
+          # Get service status
+          SERVICE_STATUS=$(aws ecs describe-services \
+            --cluster "$CI_AWS_ECS_CLUSTER" \
+            --services "$CI_AWS_ECS_SERVICE" \
+            --region ${{ env.AWS_REGION }} \
+            --query 'services[0].status' \
+            --output text)
+          
+          echo "Service Status: $SERVICE_STATUS"
+          
+          # Get running task count
+          RUNNING_COUNT=$(aws ecs describe-services \
+            --cluster "$CI_AWS_ECS_CLUSTER" \
+            --services "$CI_AWS_ECS_SERVICE" \
+            --region ${{ env.AWS_REGION }} \
+            --query 'services[0].runningCount' \
+            --output text)
+          
+          DESIRED_COUNT=$(aws ecs describe-services \
+            --cluster "$CI_AWS_ECS_CLUSTER" \
+            --services "$CI_AWS_ECS_SERVICE" \
+            --region ${{ env.AWS_REGION }} \
+            --query 'services[0].desiredCount' \
+            --output text)
+          
+          echo "Running Tasks: $RUNNING_COUNT / $DESIRED_COUNT (desired)"
+          
+          # Get latest deployment
+          LATEST_DEPLOYMENT=$(aws ecs describe-services \
+            --cluster "$CI_AWS_ECS_CLUSTER" \
+            --services "$CI_AWS_ECS_SERVICE" \
+            --region ${{ env.AWS_REGION }} \
+            --query 'services[0].deployments[0]' \
+            --output json)
+          
+          echo "Latest Deployment:"
+          echo "$LATEST_DEPLOYMENT" | jq '{status, taskDefinition, desiredCount, runningCount, createdAt}'
+          
+          echo "================================================"
+
+      - name: Deployment summary
+        if: always()
+        run: |
+          echo "### 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Parameter | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Environment** | \`${{ needs.setup-environment.outputs.environment }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Image Tag** | \`${{ needs.setup-environment.outputs.image-tag }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Full Image** | \`${{ needs.setup-environment.outputs.ecr-registry }}/${{ env.REPO_NAME }}:${{ needs.setup-environment.outputs.image-tag }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **ECS Cluster** | \`${{ needs.setup-environment.outputs.ecs-cluster }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **ECS Service** | \`${{ needs.setup-environment.outputs.ecs-service }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Task Definition** | \`${{ needs.setup-environment.outputs.ecs-task-definition }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Deployed By** | @${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Commit** | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Workflow Run** | [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Triggered At** | $(date -u +'%Y-%m-%d %H:%M:%S UTC') |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ job.status }}" == "success" ]]; then
+            echo "### ✅ Status: Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "The application has been successfully deployed to the **${{ needs.setup-environment.outputs.environment }}** environment." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ❌ Status: Deployment Failed!" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Please check the workflow logs for details." >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Next Steps:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Monitor the application in CloudWatch" >> $GITHUB_STEP_SUMMARY
+          echo "- Verify health checks are passing" >> $GITHUB_STEP_SUMMARY
+          echo "- Check application logs for any errors" >> $GITHUB_STEP_SUMMARY
