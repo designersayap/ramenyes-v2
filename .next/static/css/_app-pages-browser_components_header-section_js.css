@@ -1,0 +1,39 @@
+/*!********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[5].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[5].use[3]!./components/header-section.module.css ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************/
+.header-section_section__3UpjG {
+    padding-top: var(--padding-2xl);
+    position: relative;
+}
+
+.header-section_content__n5Ukt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.header-section_title__51jQf {
+    /* Gradient Typography Support */
+    background: var(--content-neutral--title);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    filter:
+        drop-shadow(1px 1px 0 var(--stroke-content--title)) drop-shadow(1px -1px 0 var(--stroke-content--title)) drop-shadow(-1px 1px 0 var(--stroke-content--title)) drop-shadow(-1px -1px 0 var(--stroke-content--title)) drop-shadow(1px 0 0 var(--stroke-content--title)) drop-shadow(-1px 0 0 var(--stroke-content--title)) drop-shadow(0 1px 0 var(--stroke-content--title)) drop-shadow(0 -1px 0 var(--stroke-content--title));
+}
+
+.header-section_subtitle__gbgt1 {
+    color: var(--content-neutral--body);
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.header-section_category__i2cGr {
+    color: var(--content-brand--brand);
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
