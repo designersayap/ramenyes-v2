@@ -46,7 +46,7 @@ jobs:
             echo "aws-role=arn:aws:iam::430118853482:role/smu-cicd-website-production" >> $GITHUB_OUTPUT
             echo "use-role=true" >> $GITHUB_OUTPUT
           
-            # Dev-specific resources
+            ## Dev-specific resources
             echo "ecs-cluster=${ENV}-" >> $GITHUB_OUTPUT
             echo "ecs-service=${BASE_SERVICE_NAME}" >> $GITHUB_OUTPUT
             echo "ecs-task-definition=${BASE_SERVICE_NAME}-${ENV}" >> $GITHUB_OUTPUT
