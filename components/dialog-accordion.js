@@ -11,7 +11,7 @@ const openDialog = (id) => {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id } }));
     
-    // Runtime Fallback: If specific ID fails (e.g. timestamp from old data), try default dialogs
+    // Runtime Fallback: If specific ID fails, try default dialogs
     if (id && id !== 'dialog-item-list' && id !== 'dialog-accordion' && id !== 'dialog-form') {
         window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id: 'dialog-item-list' } }));
         window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id: 'dialog-form' } }));
@@ -20,29 +20,16 @@ const openDialog = (id) => {
   }
 };
 
-const showToast = (message, type = 'success') => {
-  if (typeof window !== 'undefined') {
-    // In exported files, we can use a simple alert as a fallback
-    // or the user can implement their own toast listener
-    alert(message);
-  }
-};
-
-// Shim for BuilderText
-const BuilderText = ({ tagName = 'p', content, className, style, children, id, sectionId, suffix, isVisible = true, tooltipIfTruncated }) => {
+const BuilderText = ({ tagName = 'p', content, className, style, children, id, sectionId, suffix, isVisible = true, tooltipIfTruncated, onUpdate, ...rest }) => {
   if (!isVisible) return null;
   const Tag = tagName;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   const effectiveSuffix = suffix || (className ? className.split(' ')[0] : tagName);
   let finalId = id || (normalizedSectionId ? normalizedSectionId + '-' + effectiveSuffix : undefined);
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
-
   const finalClassName = ("builder-text " + (className || '') + " " + (!content && !children ? 'empty-builder-text' : '')).trim();
   const title = tooltipIfTruncated ? content : undefined;
-
-  // Pattern: If content is a simple string with no HTML, render directly to avoid React 19 dangerouslySetInnerHTML conflicts
-  const isSimpleString = content && typeof content === 'string' && !/<[a-z][sS]*>/i.test(content);
-
+  const isSimpleString = content && typeof content === 'string' && !/<[a-z]|&[a-z0-9#]+;/i.test(content);
   return (
     <Tag
       id={finalId}
@@ -56,8 +43,7 @@ const BuilderText = ({ tagName = 'p', content, className, style, children, id, s
   );
 };
 
-// Shim for BuilderElement
-const BuilderElement = ({ tagName = 'div', className, style, children, id, sectionId, elementProps, isVisible = true, ref }) => {
+const BuilderElement = ({ tagName = 'div', className, style, children, id, sectionId, elementProps, isVisible = true, ref, onIdChange, onVisibilityChange, onLabelChange, ...rest }) => {
   if (!isVisible) return null;
   const Tag = tagName;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
@@ -100,7 +86,6 @@ const AccordionItem = memo(({
             sectionId={sectionId}
             id={itemId}
             elementProps={`accordion-${index}`}
-            onIdChange={onIdChange}
         >
             <button
                 className={styles.accordionHeader}
@@ -200,13 +185,11 @@ export default function DialogAccordion({
             title={title}
             description={description}
             isOpen={isOpen}
-
             sectionId={sectionId}
             className={className}
             image={image}
             imageId={imageId}
             imageVisible={imageVisible !== false}
-            onImageVisibleChange={update('imageVisible')}
             imageUrl={imageUrl}
             imageLinkType={imageLinkType}
             imageTargetDialogId={imageTargetDialogId}
@@ -223,8 +206,6 @@ export default function DialogAccordion({
                             sectionId={sectionId}
                             itemId={itemIds[i]}
                             onToggle={() => toggleAccordion(i)}
-
-                            onIdChange={(val) => updateItemId(i, val)}
                         />
                     )
                 ))}

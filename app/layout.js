@@ -1,10 +1,25 @@
 import "./globals.css";
-import { Lato } from "next/font/google";
-import { Poppins } from "next/font/google";
 import localFont from "next/font/local";
 
-const lato = Lato({ subsets: ["latin"], weight: ["300", "400", "700"], variable: "--font-lato", display: "swap" });
-const poppins = Poppins({ subsets: ["latin"], weight: ["600", "700"], variable: "--font-poppins", display: "swap" });
+
+const lato = localFont({
+  src: [
+    { path: "../public/fonts/Lato-Bold.ttf", weight: "700", style: "normal" },
+    { path: "../public/fonts/Lato-Regular.ttf", weight: "400", style: "normal" }
+  ],
+  variable: "--font-lato",
+  display: "swap",
+});
+
+const poppins = localFont({
+  src: [
+    { path: "../public/fonts/Poppins-Bold.ttf", weight: "700", style: "normal" },
+    { path: "../public/fonts/Poppins-Medium.ttf", weight: "500", style: "normal" },
+    { path: "../public/fonts/Poppins-Regular.ttf", weight: "400", style: "normal" }
+  ],
+  variable: "--font-poppins",
+  display: "swap",
+});
 import Script from "next/script";
 
 export const metadata = {

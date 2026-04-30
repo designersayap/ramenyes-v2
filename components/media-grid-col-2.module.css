@@ -60,17 +60,17 @@
 
 @container (max-width: 767px) {
     :global(.container-grid) .mediaGrid:not(.marquee) .itemWrapper {
-        flex: 0 0 50% !important;
-        /* Force 2 per row even on mobile */
-        width: 50% !important;
-        max-width: 50% !important;
+        flex: 0 0 100% !important;
+        /* Force 1 per row on mobile */
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
     :global(.container-grid) .mediaGrid.marquee .itemWrapper {
-        flex: 0 0 50% !important;
-        /* Keep items at 50% width in marquee mode on mobile too */
-        width: 50% !important;
-        max-width: 50% !important;
+        flex: 0 0 100% !important;
+        /* Keep items at 100% width in marquee mode on mobile too */
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }
 
@@ -79,7 +79,7 @@
     width: 100%;
     height: auto;
     display: block;
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius-lg);
     object-fit: cover;
 }
 
@@ -87,7 +87,7 @@
     width: 100%;
     min-width: 100px;
     position: relative;
-    overflow: clip;
+    overflow: hidden;
     overflow-clip-margin: 40px;
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius-lg);
 }

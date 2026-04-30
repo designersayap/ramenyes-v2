@@ -1,5 +1,4 @@
 "use client";
-import { createElement } from 'react';
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -12,7 +11,7 @@ const openDialog = (id) => {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id } }));
     
-    // Runtime Fallback: If specific ID fails (e.g. timestamp from old data), try default dialogs
+    // Runtime Fallback: If specific ID fails, try default dialogs
     if (id && id !== 'dialog-item-list' && id !== 'dialog-accordion' && id !== 'dialog-form') {
         window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id: 'dialog-item-list' } }));
         window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id: 'dialog-form' } }));
@@ -21,15 +20,6 @@ const openDialog = (id) => {
   }
 };
 
-const showToast = (message, type = 'success') => {
-  if (typeof window !== 'undefined') {
-    // In exported files, we can use a simple alert as a fallback
-    // or the user can implement their own toast listener
-    alert(message);
-  }
-};
-
-// Shim for getContainerClasses
 const getContainerClasses = ({ removePaddingLeft, removePaddingRight, fullWidth }) => {
   const classes = ["container-grid"];
   if (removePaddingLeft) classes.push("pl-0");
@@ -38,21 +28,16 @@ const getContainerClasses = ({ removePaddingLeft, removePaddingRight, fullWidth 
   return classes.join(" ");
 };
 
-// Shim for BuilderText
-const BuilderText = ({ tagName = 'p', content, className, style, children, id, sectionId, suffix, isVisible = true, tooltipIfTruncated }) => {
+const BuilderText = ({ tagName = 'p', content, className, style, children, id, sectionId, suffix, isVisible = true, tooltipIfTruncated, onUpdate, ...rest }) => {
   if (!isVisible) return null;
   const Tag = tagName;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   const effectiveSuffix = suffix || (className ? className.split(' ')[0] : tagName);
   let finalId = id || (normalizedSectionId ? normalizedSectionId + '-' + effectiveSuffix : undefined);
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
-
   const finalClassName = ("builder-text " + (className || '') + " " + (!content && !children ? 'empty-builder-text' : '')).trim();
   const title = tooltipIfTruncated ? content : undefined;
-
-  // Pattern: If content is a simple string with no HTML, render directly to avoid React 19 dangerouslySetInnerHTML conflicts
-  const isSimpleString = content && typeof content === 'string' && !/<[a-z][sS]*>/i.test(content);
-
+  const isSimpleString = content && typeof content === 'string' && !/<[a-z]|&[a-z0-9#]+;/i.test(content);
   return (
     <Tag
       id={finalId}
@@ -66,23 +51,13 @@ const BuilderText = ({ tagName = 'p', content, className, style, children, id, s
   );
 };
 
-// Shim for BuilderButton
-const BuilderButton = ({ label, href, className, style, children, linkType, targetDialogId, id, sectionId, suffix, iconLeft, iconRight, hideLabel, isVisible = true }) => {
+const BuilderButton = ({ label, href, className, style, children, linkType, targetDialogId, id, sectionId, suffix, iconLeft, iconRight, hideLabel, isVisible = true, onUpdate, ...rest }) => {
   if (!isVisible) return null;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   let finalId = id || (normalizedSectionId && suffix ? normalizedSectionId + '-' + suffix : undefined);
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
-
-  // Resolve Icons (Lightweight Fallback)
-  const renderIcon = (icon) => {
-      if (!icon) return null;
-      // In exported mode, icons are handled via props if they were passed as JSX, 
-      // or we can add a simple lookup if needed.
-      return icon;
-  };
-
-  const isSimpleLabel = label && typeof label === 'string' && !/<[a-z][sS]*>/i.test(label);
-
+  const renderIcon = (icon) => icon;
+  const isSimpleLabel = label && typeof label === 'string' && !/<[a-z]|&[a-z0-9#]+;/i.test(label);
   const content = (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', gap: 'inherit' }}>
          {renderIcon(iconLeft) && <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>{renderIcon(iconLeft)}</span>}
@@ -94,35 +69,12 @@ const BuilderButton = ({ label, href, className, style, children, linkType, targ
          {renderIcon(iconRight) && <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>{renderIcon(iconRight)}</span>}
       </div>
   );
-
   if (linkType === 'dialog' && targetDialogId) {
     return (
-      <a
-        id={finalId}
-        href="#"
-        className={className}
-        style={{ ...style, cursor: 'pointer', textDecoration: 'none' }}
-        rel="noopener"
-        onClick={(e) => {
-             e.preventDefault();
-             openDialog(targetDialogId);
-        }}
-      >
-        {content}
-      </a>
+      <a id={finalId} href="#" className={className} style={{ ...style, cursor: 'pointer', textDecoration: 'none' }} rel="noopener" onClick={(e) => { e.preventDefault(); openDialog(targetDialogId); }}>{content}</a>
     );
   }
-  return (
-    <a
-      id={finalId}
-      href={href || '#'} 
-      className={className} 
-      style={style}
-      rel="noopener"
-    >
-        {content}
-    </a>
-  );
+  return <a id={finalId} href={href || '#'} className={className} style={style} rel="noopener">{content}</a>;
 };
 
 export default function HeaderSection({
@@ -171,7 +123,6 @@ export default function HeaderSection({
                                 sectionId={sectionId}
                                 id={titleId}
                                 suffix="title"
-                                onIdChange={update('titleId')}
                             />
                         )}
                         {subtitleVisible && (
@@ -184,7 +135,6 @@ export default function HeaderSection({
                                 sectionId={sectionId}
                                 id={subtitleId}
                                 suffix="subtitle"
-                                onIdChange={update('subtitleId')}
                             />
                         )}
                         <div className="buttonWrapperCenter">
@@ -197,18 +147,12 @@ export default function HeaderSection({
                                     className={`btn btn-${buttonStyle} btn-lg`}
                                     iconLeft={buttonIconLeft}
                                     iconRight={buttonIconRight}
-                                    onLabelChange={update('buttonText')}
-                                    onHrefChange={update('buttonUrl')}
-                                    onVisibilityChange={update('buttonVisible')}
                                     onVariantChange={update('buttonStyle')}
                                     linkType={buttonLinkType}
-                                    onLinkTypeChange={update('buttonLinkType')}
                                     targetDialogId={buttonTargetDialogId}
-                                    onTargetDialogIdChange={update('buttonTargetDialogId')}
                                     onIconLeftChange={update('buttonIconLeft')}
                                     onIconRightChange={update('buttonIconRight')}
                                     id={buttonId}
-                                    onIdChange={update('buttonId')}
                                     suffix="button"
                                 />
                             )}
@@ -219,20 +163,14 @@ export default function HeaderSection({
                                     isVisible={secondaryButtonVisible}
                                     sectionId={sectionId}
                                     className={`btn btn-${secondaryButtonStyle} btn-lg`}
-                                    onLabelChange={update('secondaryButtonText')}
-                                    onHrefChange={update('secondaryButtonUrl')}
-                                    onVisibilityChange={update('secondaryButtonVisible')}
                                     onVariantChange={update('secondaryButtonStyle')}
                                     linkType={secondaryButtonLinkType}
-                                    onLinkTypeChange={update('secondaryButtonLinkType')}
                                     targetDialogId={secondaryButtonTargetDialogId}
-                                    onTargetDialogIdChange={update('secondaryButtonTargetDialogId')}
                                     iconLeft={secondaryButtonIconLeft}
                                     iconRight={secondaryButtonIconRight}
                                     onIconLeftChange={update('secondaryButtonIconLeft')}
                                     onIconRightChange={update('secondaryButtonIconRight')}
                                     id={secondaryButtonId}
-                                    onIdChange={update('secondaryButtonId')}
                                     suffix="secondary-button"
                                 />
                             )}

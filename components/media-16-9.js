@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import styles from "./media.module.css";
-const DEFAULT_PLACEHOLDER_IMAGE = "https://space.lunaaar.site/assets-lunar/placeholder.svg";
+const DEFAULT_PLACEHOLDER_IMAGE = "";
 import { componentDefaults } from "./data";
 import { createUpdateHandler } from "./component-helpers";
 
@@ -11,7 +11,7 @@ const openDialog = (id) => {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id } }));
     
-    // Runtime Fallback: If specific ID fails (e.g. timestamp from old data), try default dialogs
+    // Runtime Fallback: If specific ID fails, try default dialogs
     if (id && id !== 'dialog-item-list' && id !== 'dialog-accordion' && id !== 'dialog-form') {
         window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id: 'dialog-item-list' } }));
         window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id: 'dialog-form' } }));
@@ -19,261 +19,123 @@ const openDialog = (id) => {
     }
   }
 };
+const PlayIcon = ({ style }) => <svg style={style} fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>;
 
-const showToast = (message, type = 'success') => {
-  if (typeof window !== 'undefined') {
-    // In exported files, we can use a simple alert as a fallback
-    // or the user can implement their own toast listener
-    alert(message);
-  }
-};
-
-// Shim for BuilderSection
-const BuilderSection = ({ tagName = 'div', className, innerContainer, fullWidth, style, children, id, sectionId, isVisible = true, removePaddingLeft, removePaddingRight }) => {
+const BuilderSection = ({ tagName = 'div', className, innerContainer, fullWidth, style, children, id, sectionId, isVisible = true, removePaddingLeft, removePaddingRight, onUpdate, ...rest }) => {
   if (!isVisible) return null;
   const Tag = tagName;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   let finalId = id || normalizedSectionId;
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
-  
   const containerClasses = ["container-grid"];
   if (removePaddingLeft === true || removePaddingLeft === "true") containerClasses.push("pl-0");
   if (removePaddingRight === true || removePaddingRight === "true") containerClasses.push("pr-0");
   if (fullWidth === true || fullWidth === "true") containerClasses.push("container-full");
   const containerClass = containerClasses.join(" ");
-  
   if (innerContainer) {
     return (
       <Tag id={finalId} className={className} style={style}>
-        <div className={containerClass}>
-          {children}
-        </div>
+        <div className={containerClass}>{children}</div>
       </Tag>
     );
   }
-
   return <Tag id={finalId} className={containerClass + " " + (className || '')} style={style}>{children}</Tag>;
 };
 
-const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href, linkType, targetDialogId, id, sectionId, suffix, isPortrait, isVisible = true, priority, aspectRatio, alwaysShowSrc }) => {
+const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href, linkType, targetDialogId, id, sectionId, suffix, isPortrait, isVisible = true, priority, aspectRatio, alwaysShowSrc, showStroke, autoplay, enableAudio, onUpdate, ...rest }) => {
   const [shouldLoad, setShouldLoad] = useState(false);
+  const isAutoplay = autoplay === true || autoplay === "true" || autoplay === undefined;
+  const isAudioEnabled = enableAudio === true || enableAudio === "true";
+  const [isPlaying, setIsPlaying] = useState(isAutoplay);
   const wrapperRef = useRef(null);
+  const videoRef = useRef(null);
 
   const isVideoFile = (url) => url && typeof url === 'string' && url.match(/\.(mp4|webm|ogg|mov)$/i);
   const isYoutube = (url) => url && typeof url === 'string' && url.match(/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.*$/);
   const isVimeo = (url) => url && typeof url === 'string' && url.match(/^(https?:\/\/)?(www\.)?(vimeo\.com)\/.*$/);
 
-  const placeholderSrc = "https://space.lunaaar.site/assets-lunar/placeholder.svg";
-
   useEffect(() => {
-    const isVideo = isVideoFile(src) || isYoutube(src) || isVimeo(src);
-    const hasSrc = src && src !== "";
-    const isPlaceholder = !src || src === "" || src === placeholderSrc || (typeof src === 'string' && src.includes('assets-lunar/placeholder.svg'));
-
-    // Hydration Safety: On the server (SSR), we render the placeholder (shouldLoad=false)
-    // to match the initial client state and avoid hydration mismatches.
-    const isSSR = typeof window === 'undefined';
-    const needsImmediateLoad = !!(priority || alwaysShowSrc || isPlaceholder || !hasSrc || (!isSSR && !window.IntersectionObserver));
-    
-    if (isSSR) return;
-
-    if (needsImmediateLoad) {
-      setShouldLoad(true);
-      return;
-    }
-
-    setShouldLoad(false);
-
-    // In exported files, we always use the browser viewport (null)
-    const scrollRoot = null;
-
+    if (typeof window === 'undefined') return;
+    const needsImmediateLoad = !!(priority || alwaysShowSrc || !src || src === "" || (!typeof window === 'undefined' && !window.IntersectionObserver));
+    if (needsImmediateLoad) { setShouldLoad(true); return; }
     const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        setShouldLoad(true);
-        observer.disconnect();
-      }
-    }, { 
-        root: scrollRoot, 
-        threshold: 0.01,
-        rootMargin: '200px' 
-    });
-
+      if (entries[0].isIntersecting) { setShouldLoad(true); observer.disconnect(); }
+    }, { threshold: 0.01, rootMargin: '200px' });
     if (wrapperRef.current) observer.observe(wrapperRef.current);
     return () => observer.disconnect();
-  }, [src, priority, alwaysShowSrc]);
+  }, [src, priority, alwaysShowSrc, href, linkType]);
+
+  useEffect(() => {
+    if (isAutoplay && shouldLoad && videoRef.current) {
+      videoRef.current.play().catch(() => {
+        setIsPlaying(false);
+      });
+    }
+  }, [isAutoplay, shouldLoad]);
 
   if (!isVisible) return null;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   let finalId = id || (normalizedSectionId && suffix ? normalizedSectionId + '-' + suffix : undefined);
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
-  const effectiveAlt = (!alt || alt === '#') && normalizedSectionId ? normalizedSectionId : (alt || '');
-  let baseClassName = className || '';
-  
-  if (isPortrait === true || String(isPortrait) === 'true') {
-    const portraitMap = {
-        'imagePlaceholder-4-3': 'imagePlaceholder-3-4',
-        'imagePlaceholder-16-9': 'imagePlaceholder-9-16',
-        'imagePlaceholder-21-9': 'imagePlaceholder-9-21',
-        'imagePlaceholder-5-4': 'imagePlaceholder-4-5'
-    };
-    Object.entries(portraitMap).forEach(([landscape, portrait]) => {
-        baseClassName = baseClassName.replace(landscape, portrait);
-    });
-  }
+  const effectiveAlt = alt || '';
+  const isStrokeEnabled = showStroke === true || showStroke === "true";
+  let baseClassName = (className || '') + ' builder-image-container' + (isStrokeEnabled ? ' has-stroke' : '');
+  if (mobileRatio) baseClassName += " mobile-aspect-" + mobileRatio;
 
-  if (mobileRatio) {
-     baseClassName += " mobile-aspect-" + mobileRatio;
-  }
-  
-  const defaultStyle = {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    display: "block",
-    backgroundColor: "transparent",
-    ...style
-  };
-
-  // Fix: Ensure navigation logos are not squished (restore object-fit contain)
-  if (baseClassName.includes('navigation') || baseClassName.includes('logo') || baseClassName.includes('object-contain')) {
-      if (!style || !style.objectFit) {
-          defaultStyle.objectFit = 'contain';
-      }
-  }
+  const mediaStyle = { width: "100%", height: "100%", objectFit: "cover", display: "block", ...style };
+  const mediaClass = 'builder-image-media';
 
   const getYoutubeEmbedUrl = (url) => {
-      if (!url) return '';
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-      const match = url.match(regExp);
-      const id = (match && match[2].length === 11) ? match[2] : null;
-      return id ? "https://www.youtube.com/embed/" + id + "?autoplay=1&mute=1&loop=1&playlist=" + id + "&controls=0" : url;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    const id = match && match[2].length === 11 ? match[2] : null;
+    return id ? "https://www.youtube.com/embed/" + id + "?autoplay=" + (isAutoplay ? 1 : 0) + "&mute=" + (isAudioEnabled ? 0 : 1) + "&loop=1&playlist=" + id + "&controls=0" : url;
   };
 
   const getVimeoEmbedUrl = (url) => {
-      if (!url) return '';
-      const regExp = /vimeo\.com\/(\d+)/;
-      const match = url.match(regExp);
-      const id = match ? match[1] : null;
-      return id ? "https://player.vimeo.com/video/" + id + "?autoplay=1&loop=1&muted=1&background=1" : url;
+    const match = url.match(/vimeo\.com\/(\d+)/);
+    const id = match ? match[1] : null;
+    return id ? "https://player.vimeo.com/video/" + id + "?autoplay=" + (isAutoplay ? 1 : 0) + "&loop=1&muted=" + (isAudioEnabled ? 0 : 1) + "&background=" + (isAutoplay ? 1 : 0) : url;
   };
-
-  const imageSrc = (src && src !== "") ? src : placeholderSrc;
-  const isLink = href || (linkType === 'dialog' && targetDialogId);
-  const mediaStyle = { ...defaultStyle };
-  const mediaClass = 'builder-image-media';
 
   let mediaContent;
   if (isYoutube(src)) {
-      mediaContent = shouldLoad ? (
-          <iframe
-              id={!isLink ? finalId : undefined}
-              src={getYoutubeEmbedUrl(src)}
-              className={mediaClass}
-              style={{ ...mediaStyle, border: 'none' }}
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              title="YouTube video"
-          />
-      ) : <div className={mediaClass} style={{ ...mediaStyle, backgroundColor: '#f3f4f6', minHeight: '100px' }} />;
+    mediaContent = shouldLoad ? <iframe src={getYoutubeEmbedUrl(src)} className={mediaClass} style={{ ...mediaStyle, border: 'none' }} allow="autoplay; fullscreen" allowFullScreen /> : <div className={mediaClass} style={mediaStyle} />;
   } else if (isVimeo(src)) {
-      mediaContent = shouldLoad ? (
-          <iframe
-              id={!isLink ? finalId : undefined}
-              src={getVimeoEmbedUrl(src)}
-              className={mediaClass}
-              style={{ ...mediaStyle, border: 'none' }}
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              loading="lazy"
-              title="Vimeo video"
-          />
-      ) : <div className={mediaClass} style={{ ...mediaStyle, backgroundColor: '#f3f4f6', minHeight: '100px' }} />;
+    mediaContent = shouldLoad ? <iframe src={getVimeoEmbedUrl(src)} className={mediaClass} style={{ ...mediaStyle, border: 'none' }} allow="autoplay; fullscreen" allowFullScreen /> : <div className={mediaClass} style={mediaStyle} />;
   } else if (isVideoFile(src)) {
-      mediaContent = (
-          <video
-              id={!isLink ? finalId : undefined}
-              className={mediaClass}
-              style={mediaStyle}
-              autoPlay={shouldLoad}
-              loop
-              muted
-              playsInline
-              preload="none"
-          >
-              {shouldLoad && (
-                <>
-                  {mobileSrc && <source src={mobileSrc} media="(max-width: 767px)" />}
-                  <source src={src} />
-                </>
-              )}
-              Your browser does not support the video tag.
-          </video>
-      );
-  } else {
-      mediaContent = shouldLoad ? (
-        <>
-            {mobileSrc && <source media="(max-width: 767px)" srcSet={mobileSrc} />}
-            <img 
-                id={!isLink ? finalId : undefined}
-                src={imageSrc} 
-                alt={effectiveAlt} 
-                className={mediaClass} 
-                style={mediaStyle} 
-                loading={priority ? "eager" : "lazy"}
-                fetchPriority={priority ? "high" : undefined}
-                decoding="async"
-            />
-        </>
-      ) : (
-        <div
-            id={!isLink ? finalId : undefined}
-            className={mediaClass}
-            style={{ 
-                ...mediaStyle, 
-                backgroundColor: '#f3f4f6', 
-                minHeight: '100px',
-                aspectRatio: aspectRatio ? aspectRatio.replace('-', '/') : undefined
-            }}
-        />
-      );
-  }
-
-  const content = (mobileSrc && !isVideoFile(src) && !isYoutube(src) && !isVimeo(src)) ? (
-     <picture style={{ display: 'contents' }}>{mediaContent}</picture>
-  ) : mediaContent;
-
-  const wrapperStyle = { 
-    display: 'block', 
-    width: '100%', 
-    height: '100%',
-    textDecoration: 'none', 
-    position: 'relative',
-    overflow: 'hidden',
-    ...style 
-  };
-
-  if (isLink) {
-    return (
-      <a
-         ref={wrapperRef}
-         id={finalId}
-         href={href || '#'} 
-         className={baseClassName} 
-         style={wrapperStyle}
-         rel="noopener"
-         onClick={(e) => {
-             if (linkType === 'dialog' && typeof openDialog === 'function') {
-                 e.preventDefault();
-                 openDialog(targetDialogId);
-             }
-         }}
-      >
-        {content}
-      </a>
+    mediaContent = (
+      <>
+        <video 
+          ref={videoRef} 
+          className={mediaClass} 
+          style={mediaStyle} 
+          autoPlay={isAutoplay && shouldLoad} 
+          loop 
+          muted={!isAudioEnabled} 
+          playsInline 
+          preload={!isAutoplay ? "auto" : (shouldLoad ? "metadata" : "none")} 
+          onPlay={() => setIsPlaying(true)} 
+          onPause={() => setIsPlaying(false)}
+        >
+          {src && <source src={(src && !src.startsWith('http') ? encodeURI(src) : src) + (!isAutoplay ? "#t=0.001" : "")} />}
+        </video>
+        {!isPlaying && (
+          <button type="button" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(0,0,0,0.6)', borderRadius: '50%', width: '64px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, border: 'none' }} onClick={(e) => { e.preventDefault(); if (videoRef.current) videoRef.current.play(); }}>
+            <PlayIcon style={{ color: 'white', width: '32px', height: '32px' }} />
+          </button>
+        )}
+      </>
     );
+  } else {
+    mediaContent = shouldLoad ? <img src={src || "https://space.lunaaar.site/assets-lunar/placeholder.svg"} alt={effectiveAlt} className={mediaClass} style={mediaStyle} loading={priority ? "eager" : "lazy"} /> : <div className={mediaClass} style={mediaStyle} />;
   }
 
-  return <div ref={wrapperRef} className={baseClassName} style={wrapperStyle}>{content}</div>;
+  const wrapperStyle = { display: 'block', width: '100%', height: '100%', position: 'relative', overflow: 'hidden', ...style };
+  if (href || (linkType === 'dialog' && targetDialogId)) {
+    return <a ref={wrapperRef} id={finalId} href={href || '#'} className={baseClassName} style={wrapperStyle} onClick={(e) => { if (linkType === 'dialog') { e.preventDefault(); openDialog(targetDialogId); } }}>{mediaContent}</a>;
+  }
+  return <div ref={wrapperRef} className={baseClassName} style={wrapperStyle}>{mediaContent}</div>;
 };
 
 export default function Media16x9({
@@ -292,7 +154,8 @@ export default function Media16x9({
     imageMobileRatio,
     imageMobileSrc,
     imageEnableAudio,
-    imageAutoplay = componentDefaults["media-16-9"].imageAutoplay
+    imageAutoplay = componentDefaults["media-16-9"].imageAutoplay,
+    imageShowStroke
 }) {
     const update = createUpdateHandler(onUpdate);
 
@@ -305,36 +168,27 @@ export default function Media16x9({
             fullWidth={fullWidth}
             removePaddingLeft={removePaddingLeft}
             removePaddingRight={removePaddingRight}
-
         >
             <div className="grid">
                 <div className="col-mobile-4 col-tablet-8 col-desktop-12">
                     <div className="imageWrapper">
                         <BuilderImage
                             src={image}
-                            onSrcChange={update('image')}
                             className={`${styles.image} imagePlaceholder-16-9 object-cover`}
                             id={imageId}
                             sectionId={sectionId}
                             isVisible={imageVisible}
-                            onIdChange={update('imageId')}
                             suffix="image"
                             href={imageUrl}
-                            onHrefChange={update('imageUrl')}
                             linkType={imageLinkType}
-                            onLinkTypeChange={update('imageLinkType')}
                             targetDialogId={imageTargetDialogId}
-                            onTargetDialogIdChange={update('imageTargetDialogId')}
                             isPortrait={imageIsPortrait}
-                            onIsPortraitChange={update('imageIsPortrait')}
                             mobileRatio={imageMobileRatio}
-                            onMobileRatioChange={update('imageMobileRatio')}
                             mobileSrc={imageMobileSrc}
                             onMobileSrcChange={update('imageMobileSrc')}
                             enableAudio={imageEnableAudio}
-                            onEnableAudioChange={update('imageEnableAudio')}
                             autoplay={imageAutoplay}
-                            onAutoplayChange={update('imageAutoplay')}
+                            showStroke={imageShowStroke}
                         />
                     </div>
                 </div>

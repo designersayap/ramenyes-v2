@@ -5,7 +5,10 @@
 }
 
 .image {
+    width: 100%;
     height: auto;
     display: block;
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    isolation: isolate;
 }

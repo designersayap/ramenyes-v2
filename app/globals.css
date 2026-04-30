@@ -134,7 +134,7 @@
     --stroke-default: var(--grey-100);
     --stroke-typography-title: transparent;
     --stroke-typography-body: transparent;
-    --stroke-container: transparent;
+    --stroke-container: var(--base-white);
 
     /* Button */
     --text--primary-button: var(--base-white);
@@ -1931,6 +1931,17 @@ strong {
 .media-mute-icon {
   width: 16px;
   height: 16px;
+}
+
+/* ============================================
+   BUILDER IMAGE STROKE
+   ============================================ */
+
+.has-stroke {
+  border: 2px solid var(--stroke-card);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  isolation: isolate;
 }
 
 

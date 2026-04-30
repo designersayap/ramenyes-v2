@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useRef, useState, useEffect, useCallback } from "react";
 import styles from "./gallery-strip.module.css";
-const DEFAULT_PLACEHOLDER_IMAGE = "https://space.lunaaar.site/assets-lunar/placeholder.svg";
+const DEFAULT_PLACEHOLDER_IMAGE = "";
 import { componentDefaults } from "./data";
 
 
@@ -10,7 +10,7 @@ const openDialog = (id) => {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id } }));
     
-    // Runtime Fallback: If specific ID fails (e.g. timestamp from old data), try default dialogs
+    // Runtime Fallback: If specific ID fails, try default dialogs
     if (id && id !== 'dialog-item-list' && id !== 'dialog-accordion' && id !== 'dialog-form') {
         window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id: 'dialog-item-list' } }));
         window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id: 'dialog-form' } }));
@@ -18,57 +18,39 @@ const openDialog = (id) => {
     }
   }
 };
+const PlayIcon = ({ style }) => <svg style={style} fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>;
 
-const showToast = (message, type = 'success') => {
-  if (typeof window !== 'undefined') {
-    // In exported files, we can use a simple alert as a fallback
-    // or the user can implement their own toast listener
-    alert(message);
-  }
-};
-
-// Shim for BuilderSection
-const BuilderSection = ({ tagName = 'div', className, innerContainer, fullWidth, style, children, id, sectionId, isVisible = true, removePaddingLeft, removePaddingRight }) => {
+const BuilderSection = ({ tagName = 'div', className, innerContainer, fullWidth, style, children, id, sectionId, isVisible = true, removePaddingLeft, removePaddingRight, onUpdate, ...rest }) => {
   if (!isVisible) return null;
   const Tag = tagName;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   let finalId = id || normalizedSectionId;
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
-  
   const containerClasses = ["container-grid"];
   if (removePaddingLeft === true || removePaddingLeft === "true") containerClasses.push("pl-0");
   if (removePaddingRight === true || removePaddingRight === "true") containerClasses.push("pr-0");
   if (fullWidth === true || fullWidth === "true") containerClasses.push("container-full");
   const containerClass = containerClasses.join(" ");
-  
   if (innerContainer) {
     return (
       <Tag id={finalId} className={className} style={style}>
-        <div className={containerClass}>
-          {children}
-        </div>
+        <div className={containerClass}>{children}</div>
       </Tag>
     );
   }
-
   return <Tag id={finalId} className={containerClass + " " + (className || '')} style={style}>{children}</Tag>;
 };
 
-// Shim for BuilderText
-const BuilderText = ({ tagName = 'p', content, className, style, children, id, sectionId, suffix, isVisible = true, tooltipIfTruncated }) => {
+const BuilderText = ({ tagName = 'p', content, className, style, children, id, sectionId, suffix, isVisible = true, tooltipIfTruncated, onUpdate, ...rest }) => {
   if (!isVisible) return null;
   const Tag = tagName;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   const effectiveSuffix = suffix || (className ? className.split(' ')[0] : tagName);
   let finalId = id || (normalizedSectionId ? normalizedSectionId + '-' + effectiveSuffix : undefined);
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
-
   const finalClassName = ("builder-text " + (className || '') + " " + (!content && !children ? 'empty-builder-text' : '')).trim();
   const title = tooltipIfTruncated ? content : undefined;
-
-  // Pattern: If content is a simple string with no HTML, render directly to avoid React 19 dangerouslySetInnerHTML conflicts
-  const isSimpleString = content && typeof content === 'string' && !/<[a-z][sS]*>/i.test(content);
-
+  const isSimpleString = content && typeof content === 'string' && !/<[a-z]|&[a-z0-9#]+;/i.test(content);
   return (
     <Tag
       id={finalId}
@@ -82,229 +64,103 @@ const BuilderText = ({ tagName = 'p', content, className, style, children, id, s
   );
 };
 
-const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href, linkType, targetDialogId, id, sectionId, suffix, isPortrait, isVisible = true, priority, aspectRatio, alwaysShowSrc }) => {
+const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href, linkType, targetDialogId, id, sectionId, suffix, isPortrait, isVisible = true, priority, aspectRatio, alwaysShowSrc, showStroke, autoplay, enableAudio, onUpdate, ...rest }) => {
   const [shouldLoad, setShouldLoad] = useState(false);
+  const isAutoplay = autoplay === true || autoplay === "true" || autoplay === undefined;
+  const isAudioEnabled = enableAudio === true || enableAudio === "true";
+  const [isPlaying, setIsPlaying] = useState(isAutoplay);
   const wrapperRef = useRef(null);
+  const videoRef = useRef(null);
 
   const isVideoFile = (url) => url && typeof url === 'string' && url.match(/\.(mp4|webm|ogg|mov)$/i);
   const isYoutube = (url) => url && typeof url === 'string' && url.match(/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.*$/);
   const isVimeo = (url) => url && typeof url === 'string' && url.match(/^(https?:\/\/)?(www\.)?(vimeo\.com)\/.*$/);
 
-  const placeholderSrc = "https://space.lunaaar.site/assets-lunar/placeholder.svg";
-
   useEffect(() => {
-    const isVideo = isVideoFile(src) || isYoutube(src) || isVimeo(src);
-    const hasSrc = src && src !== "";
-    const isPlaceholder = !src || src === "" || src === placeholderSrc || (typeof src === 'string' && src.includes('assets-lunar/placeholder.svg'));
-
-    // Hydration Safety: On the server (SSR), we render the placeholder (shouldLoad=false)
-    // to match the initial client state and avoid hydration mismatches.
-    const isSSR = typeof window === 'undefined';
-    const needsImmediateLoad = !!(priority || alwaysShowSrc || isPlaceholder || !hasSrc || (!isSSR && !window.IntersectionObserver));
-    
-    if (isSSR) return;
-
-    if (needsImmediateLoad) {
-      setShouldLoad(true);
-      return;
-    }
-
-    setShouldLoad(false);
-
-    // In exported files, we always use the browser viewport (null)
-    const scrollRoot = null;
-
+    if (typeof window === 'undefined') return;
+    const needsImmediateLoad = !!(priority || alwaysShowSrc || !src || src === "" || (!typeof window === 'undefined' && !window.IntersectionObserver));
+    if (needsImmediateLoad) { setShouldLoad(true); return; }
     const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        setShouldLoad(true);
-        observer.disconnect();
-      }
-    }, { 
-        root: scrollRoot, 
-        threshold: 0.01,
-        rootMargin: '200px' 
-    });
-
+      if (entries[0].isIntersecting) { setShouldLoad(true); observer.disconnect(); }
+    }, { threshold: 0.01, rootMargin: '200px' });
     if (wrapperRef.current) observer.observe(wrapperRef.current);
     return () => observer.disconnect();
-  }, [src, priority, alwaysShowSrc]);
+  }, [src, priority, alwaysShowSrc, href, linkType]);
+
+  useEffect(() => {
+    if (isAutoplay && shouldLoad && videoRef.current) {
+      videoRef.current.play().catch(() => {
+        setIsPlaying(false);
+      });
+    }
+  }, [isAutoplay, shouldLoad]);
 
   if (!isVisible) return null;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   let finalId = id || (normalizedSectionId && suffix ? normalizedSectionId + '-' + suffix : undefined);
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
-  const effectiveAlt = (!alt || alt === '#') && normalizedSectionId ? normalizedSectionId : (alt || '');
-  let baseClassName = className || '';
-  
-  if (isPortrait === true || String(isPortrait) === 'true') {
-    const portraitMap = {
-        'imagePlaceholder-4-3': 'imagePlaceholder-3-4',
-        'imagePlaceholder-16-9': 'imagePlaceholder-9-16',
-        'imagePlaceholder-21-9': 'imagePlaceholder-9-21',
-        'imagePlaceholder-5-4': 'imagePlaceholder-4-5'
-    };
-    Object.entries(portraitMap).forEach(([landscape, portrait]) => {
-        baseClassName = baseClassName.replace(landscape, portrait);
-    });
-  }
+  const effectiveAlt = alt || '';
+  const isStrokeEnabled = showStroke === true || showStroke === "true";
+  let baseClassName = (className || '') + ' builder-image-container' + (isStrokeEnabled ? ' has-stroke' : '');
+  if (mobileRatio) baseClassName += " mobile-aspect-" + mobileRatio;
 
-  if (mobileRatio) {
-     baseClassName += " mobile-aspect-" + mobileRatio;
-  }
-  
-  const defaultStyle = {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    display: "block",
-    backgroundColor: "transparent",
-    ...style
-  };
-
-  // Fix: Ensure navigation logos are not squished (restore object-fit contain)
-  if (baseClassName.includes('navigation') || baseClassName.includes('logo') || baseClassName.includes('object-contain')) {
-      if (!style || !style.objectFit) {
-          defaultStyle.objectFit = 'contain';
-      }
-  }
+  const mediaStyle = { width: "100%", height: "100%", objectFit: "cover", display: "block", ...style };
+  const mediaClass = 'builder-image-media';
 
   const getYoutubeEmbedUrl = (url) => {
-      if (!url) return '';
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-      const match = url.match(regExp);
-      const id = (match && match[2].length === 11) ? match[2] : null;
-      return id ? "https://www.youtube.com/embed/" + id + "?autoplay=1&mute=1&loop=1&playlist=" + id + "&controls=0" : url;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    const id = match && match[2].length === 11 ? match[2] : null;
+    return id ? "https://www.youtube.com/embed/" + id + "?autoplay=" + (isAutoplay ? 1 : 0) + "&mute=" + (isAudioEnabled ? 0 : 1) + "&loop=1&playlist=" + id + "&controls=0" : url;
   };
 
   const getVimeoEmbedUrl = (url) => {
-      if (!url) return '';
-      const regExp = /vimeo\.com\/(\d+)/;
-      const match = url.match(regExp);
-      const id = match ? match[1] : null;
-      return id ? "https://player.vimeo.com/video/" + id + "?autoplay=1&loop=1&muted=1&background=1" : url;
+    const match = url.match(/vimeo\.com\/(\d+)/);
+    const id = match ? match[1] : null;
+    return id ? "https://player.vimeo.com/video/" + id + "?autoplay=" + (isAutoplay ? 1 : 0) + "&loop=1&muted=" + (isAudioEnabled ? 0 : 1) + "&background=" + (isAutoplay ? 1 : 0) : url;
   };
-
-  const imageSrc = (src && src !== "") ? src : placeholderSrc;
-  const isLink = href || (linkType === 'dialog' && targetDialogId);
-  const mediaStyle = { ...defaultStyle };
-  const mediaClass = 'builder-image-media';
 
   let mediaContent;
   if (isYoutube(src)) {
-      mediaContent = shouldLoad ? (
-          <iframe
-              id={!isLink ? finalId : undefined}
-              src={getYoutubeEmbedUrl(src)}
-              className={mediaClass}
-              style={{ ...mediaStyle, border: 'none' }}
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              title="YouTube video"
-          />
-      ) : <div className={mediaClass} style={{ ...mediaStyle, backgroundColor: '#f3f4f6', minHeight: '100px' }} />;
+    mediaContent = shouldLoad ? <iframe src={getYoutubeEmbedUrl(src)} className={mediaClass} style={{ ...mediaStyle, border: 'none' }} allow="autoplay; fullscreen" allowFullScreen /> : <div className={mediaClass} style={mediaStyle} />;
   } else if (isVimeo(src)) {
-      mediaContent = shouldLoad ? (
-          <iframe
-              id={!isLink ? finalId : undefined}
-              src={getVimeoEmbedUrl(src)}
-              className={mediaClass}
-              style={{ ...mediaStyle, border: 'none' }}
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              loading="lazy"
-              title="Vimeo video"
-          />
-      ) : <div className={mediaClass} style={{ ...mediaStyle, backgroundColor: '#f3f4f6', minHeight: '100px' }} />;
+    mediaContent = shouldLoad ? <iframe src={getVimeoEmbedUrl(src)} className={mediaClass} style={{ ...mediaStyle, border: 'none' }} allow="autoplay; fullscreen" allowFullScreen /> : <div className={mediaClass} style={mediaStyle} />;
   } else if (isVideoFile(src)) {
-      mediaContent = (
-          <video
-              id={!isLink ? finalId : undefined}
-              className={mediaClass}
-              style={mediaStyle}
-              autoPlay={shouldLoad}
-              loop
-              muted
-              playsInline
-              preload="none"
-          >
-              {shouldLoad && (
-                <>
-                  {mobileSrc && <source src={mobileSrc} media="(max-width: 767px)" />}
-                  <source src={src} />
-                </>
-              )}
-              Your browser does not support the video tag.
-          </video>
-      );
-  } else {
-      mediaContent = shouldLoad ? (
-        <>
-            {mobileSrc && <source media="(max-width: 767px)" srcSet={mobileSrc} />}
-            <img 
-                id={!isLink ? finalId : undefined}
-                src={imageSrc} 
-                alt={effectiveAlt} 
-                className={mediaClass} 
-                style={mediaStyle} 
-                loading={priority ? "eager" : "lazy"}
-                fetchPriority={priority ? "high" : undefined}
-                decoding="async"
-            />
-        </>
-      ) : (
-        <div
-            id={!isLink ? finalId : undefined}
-            className={mediaClass}
-            style={{ 
-                ...mediaStyle, 
-                backgroundColor: '#f3f4f6', 
-                minHeight: '100px',
-                aspectRatio: aspectRatio ? aspectRatio.replace('-', '/') : undefined
-            }}
-        />
-      );
-  }
-
-  const content = (mobileSrc && !isVideoFile(src) && !isYoutube(src) && !isVimeo(src)) ? (
-     <picture style={{ display: 'contents' }}>{mediaContent}</picture>
-  ) : mediaContent;
-
-  const wrapperStyle = { 
-    display: 'block', 
-    width: '100%', 
-    height: '100%',
-    textDecoration: 'none', 
-    position: 'relative',
-    overflow: 'hidden',
-    ...style 
-  };
-
-  if (isLink) {
-    return (
-      <a
-         ref={wrapperRef}
-         id={finalId}
-         href={href || '#'} 
-         className={baseClassName} 
-         style={wrapperStyle}
-         rel="noopener"
-         onClick={(e) => {
-             if (linkType === 'dialog' && typeof openDialog === 'function') {
-                 e.preventDefault();
-                 openDialog(targetDialogId);
-             }
-         }}
-      >
-        {content}
-      </a>
+    mediaContent = (
+      <>
+        <video 
+          ref={videoRef} 
+          className={mediaClass} 
+          style={mediaStyle} 
+          autoPlay={isAutoplay && shouldLoad} 
+          loop 
+          muted={!isAudioEnabled} 
+          playsInline 
+          preload={!isAutoplay ? "auto" : (shouldLoad ? "metadata" : "none")} 
+          onPlay={() => setIsPlaying(true)} 
+          onPause={() => setIsPlaying(false)}
+        >
+          {src && <source src={(src && !src.startsWith('http') ? encodeURI(src) : src) + (!isAutoplay ? "#t=0.001" : "")} />}
+        </video>
+        {!isPlaying && (
+          <button type="button" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(0,0,0,0.6)', borderRadius: '50%', width: '64px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, border: 'none' }} onClick={(e) => { e.preventDefault(); if (videoRef.current) videoRef.current.play(); }}>
+            <PlayIcon style={{ color: 'white', width: '32px', height: '32px' }} />
+          </button>
+        )}
+      </>
     );
+  } else {
+    mediaContent = shouldLoad ? <img src={src || "https://space.lunaaar.site/assets-lunar/placeholder.svg"} alt={effectiveAlt} className={mediaClass} style={mediaStyle} loading={priority ? "eager" : "lazy"} /> : <div className={mediaClass} style={mediaStyle} />;
   }
 
-  return <div ref={wrapperRef} className={baseClassName} style={wrapperStyle}>{content}</div>;
+  const wrapperStyle = { display: 'block', width: '100%', height: '100%', position: 'relative', overflow: 'hidden', ...style };
+  if (href || (linkType === 'dialog' && targetDialogId)) {
+    return <a ref={wrapperRef} id={finalId} href={href || '#'} className={baseClassName} style={wrapperStyle} onClick={(e) => { if (linkType === 'dialog') { e.preventDefault(); openDialog(targetDialogId); } }}>{mediaContent}</a>;
+  }
+  return <div ref={wrapperRef} className={baseClassName} style={wrapperStyle}>{mediaContent}</div>;
 };
 
-// Shim for BuilderElement
-const BuilderElement = ({ tagName = 'div', className, style, children, id, sectionId, elementProps, isVisible = true, ref }) => {
+const BuilderElement = ({ tagName = 'div', className, style, children, id, sectionId, elementProps, isVisible = true, ref, onIdChange, onVisibilityChange, onLabelChange, ...rest }) => {
   if (!isVisible) return null;
   const Tag = tagName;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
@@ -327,7 +183,8 @@ export default function GalleryStrip({
     marqueeDirection = componentDefaults["gallery-strip"].marqueeDirection,
     imageOnly = componentDefaults["gallery-strip"].imageOnly,
     isCompact = componentDefaults["gallery-strip"].isCompact,
-    aspectRatio = componentDefaults["gallery-strip"].aspectRatio
+    aspectRatio = componentDefaults["gallery-strip"].aspectRatio,
+    imageShowStroke = componentDefaults["gallery-strip"].imageShowStroke
 }) {
     // Sanitize data
     const items = (rawItems || []).filter(item => item !== null && typeof item === 'object');
@@ -339,6 +196,7 @@ export default function GalleryStrip({
     const isImageOnly = imageOnly === true || imageOnly === "true";
     const isCompactMode = isCompact === true || isCompact === "true";
     const isFullWidth = fullWidth === true || fullWidth === "true";
+    const isStrokeEnabled = imageShowStroke === true || imageShowStroke === "true";
 
     const scrollContainerRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -520,18 +378,15 @@ export default function GalleryStrip({
             fullWidth={isFullWidth}
             removePaddingLeft={removePaddingLeft}
             removePaddingRight={removePaddingRight}
-
-            showAutoScrollToggle={true}
             autoScroll={isAutoScroll}
             autoScrollEffect={autoScrollEffect}
             marqueeDuration={marqueeDuration}
             marqueeDirection={marqueeDirection}
-            showImageOnlyToggle={true}
             imageOnly={isImageOnly}
-            showCompactToggle={true}
             isCompact={isCompactMode}
-            showAspectRatioToggle={true}
             aspectRatio={aspectRatio}
+            imageShowStroke={isStrokeEnabled}
+            onShowStrokeChange={(val) => onUpdate({ imageShowStroke: val })}
         >
             <div className="grid">
                 <div className="col-mobile-4 col-tablet-8 col-desktop-12">
@@ -556,38 +411,30 @@ export default function GalleryStrip({
                                     className={styles.itemWrapper}
                                     id={item.cardId}
                                     sectionId={sectionId}
-                                    onIdChange={(val) => updateCardId(item._originalIndex, val)}
                                     elementProps={`gallery-strip-${index}`}
                                     isVisible={item.visible !== false}
                                 >
                                         <div 
-                                            className={styles.card}
+                                            className={`${styles.card} ${isStrokeEnabled ? 'has-stroke' : ''}`}
                                             style={{ 
                                                 aspectRatio: aspectRatio ? aspectRatio.replace('-', ' / ') : '9 / 16'
                                             }}
                                         >
                                             <BuilderImage
                                                 src={item.image || DEFAULT_PLACEHOLDER_IMAGE}
-                                                onSrcChange={(val) => updateItem(item._originalIndex, "image", val)}
                                                 className={styles.backgroundImage}
                                                 id={item.imageId}
                                                 sectionId={sectionId}
                                                 isVisible={true}
-                                                onIdChange={(val) => updateItem(item._originalIndex, "imageId", val)}
                                                 suffix={`bg-${index}`}
                                                 href={item.url}
-                                                onHrefChange={(val) => updateItem(item._originalIndex, "url", val)}
                                                 linkType={item.linkType}
-                                                onLinkTypeChange={(val) => updateItem(item._originalIndex, "linkType", val)}
                                                 targetDialogId={item.targetDialogId}
-                                                onTargetDialogIdChange={(val) => updateItem(item._originalIndex, "targetDialogId", val)}
-                                                showPortraitToggle={false}
                                                 showAspectRatio={false}
                                                 showMobileRatio={false}
                                                 enableAudio={item.enableAudio}
-                                                onEnableAudioChange={(val) => updateItem(index, 'enableAudio', val)}
                                                 autoplay={item.imageAutoplay}
-                                                onAutoplayChange={(val) => updateItem(index, 'imageAutoplay', val)}
+                                                showStroke={false}
                                             />
 
                                             {!isImageOnly && (

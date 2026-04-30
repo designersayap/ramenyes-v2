@@ -260,7 +260,8 @@ export const componentDefaults = {
         buttonTargetDialogId: "",
         buttonId: "",
         isSticky: true,
-        isOverlay: false
+        isOverlay: false,
+        variant: "neutral"
     },
     "media-16-9": {
         image: "",
@@ -325,7 +326,8 @@ export const componentDefaults = {
         autoScroll: false,
         autoScrollEffect: "slide",
         marqueeDuration: 60,
-        marqueeDirection: "rtl"
+        marqueeDirection: "rtl",
+        imageShowStroke: false
     },
     "media-grid-col-2": {
         images: Array.from({ length: 4 }, (_, i) => ({
@@ -346,7 +348,8 @@ export const componentDefaults = {
         autoScroll: false,
         autoScrollEffect: "slide",
         marqueeDuration: 60,
-        marqueeDirection: "rtl"
+        marqueeDirection: "rtl",
+        imageShowStroke: false
     },
     "media-grid-col-6": {
         images: Array.from({ length: 6 }, (_, i) => ({
@@ -367,7 +370,8 @@ export const componentDefaults = {
         autoScroll: false,
         autoScrollEffect: "slide",
         marqueeDuration: 60,
-        marqueeDirection: "rtl"
+        marqueeDirection: "rtl",
+        imageShowStroke: false
     },
     "navigation-center": {
         logo: "",
@@ -489,7 +493,8 @@ export const componentDefaults = {
         autoScroll: true,
         autoScrollEffect: 'slide',
         marqueeDuration: 120,
-        marqueeDirection: 'rtl'
+        marqueeDirection: 'rtl',
+        imageShowStroke: false
     },
     "testimony-portrait": {
         testimonies: Array(4).fill({
@@ -515,7 +520,8 @@ export const componentDefaults = {
         autoScroll: true,
         autoScrollEffect: 'slide',
         marqueeDuration: 120,
-        marqueeDirection: 'rtl'
+        marqueeDirection: 'rtl',
+        imageShowStroke: false
     },
     "scroll-group": {
         image: "", // Desktop Background
@@ -531,6 +537,7 @@ export const componentDefaults = {
     "product-carousel-terra": {
         showTabs: true,
         showActionButtons: true,
+        imageShowStroke: false,
         categories: [
             { id: "cat-1", label: "Category 1", visible: true },
             { id: "cat-2", label: "Category 2", visible: true },
@@ -588,6 +595,7 @@ export const componentDefaults = {
             image: "",
             imageId: "",
             imageAutoplay: true,
+            showStroke: true,
             cardId: "",
             visible: true,
             url: "",
@@ -600,6 +608,7 @@ export const componentDefaults = {
         marqueeDirection: 'rtl',
         imageOnly: false,
         isCompact: false,
-        aspectRatio: "9-16"
+        aspectRatio: "9-16",
+        imageShowStroke: false
     },
 };

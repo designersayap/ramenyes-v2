@@ -1,5 +1,4 @@
 "use client";
-import { createElement } from 'react';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
@@ -13,7 +12,7 @@ const openDialog = (id) => {
   if (typeof window !== 'undefined') {
     window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id } }));
     
-    // Runtime Fallback: If specific ID fails (e.g. timestamp from old data), try default dialogs
+    // Runtime Fallback: If specific ID fails, try default dialogs
     if (id && id !== 'dialog-item-list' && id !== 'dialog-accordion' && id !== 'dialog-form') {
         window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id: 'dialog-item-list' } }));
         window.dispatchEvent(new CustomEvent('lunar:open-dialog', { detail: { id: 'dialog-form' } }));
@@ -22,56 +21,37 @@ const openDialog = (id) => {
   }
 };
 
-const showToast = (message, type = 'success') => {
-  if (typeof window !== 'undefined') {
-    // In exported files, we can use a simple alert as a fallback
-    // or the user can implement their own toast listener
-    alert(message);
-  }
-};
-
-// Shim for BuilderSection
-const BuilderSection = ({ tagName = 'div', className, innerContainer, fullWidth, style, children, id, sectionId, isVisible = true, removePaddingLeft, removePaddingRight }) => {
+const BuilderSection = ({ tagName = 'div', className, innerContainer, fullWidth, style, children, id, sectionId, isVisible = true, removePaddingLeft, removePaddingRight, onUpdate, ...rest }) => {
   if (!isVisible) return null;
   const Tag = tagName;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   let finalId = id || normalizedSectionId;
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
-  
   const containerClasses = ["container-grid"];
   if (removePaddingLeft === true || removePaddingLeft === "true") containerClasses.push("pl-0");
   if (removePaddingRight === true || removePaddingRight === "true") containerClasses.push("pr-0");
   if (fullWidth === true || fullWidth === "true") containerClasses.push("container-full");
   const containerClass = containerClasses.join(" ");
-  
   if (innerContainer) {
     return (
       <Tag id={finalId} className={className} style={style}>
-        <div className={containerClass}>
-          {children}
-        </div>
+        <div className={containerClass}>{children}</div>
       </Tag>
     );
   }
-
   return <Tag id={finalId} className={containerClass + " " + (className || '')} style={style}>{children}</Tag>;
 };
 
-// Shim for BuilderText
-const BuilderText = ({ tagName = 'p', content, className, style, children, id, sectionId, suffix, isVisible = true, tooltipIfTruncated }) => {
+const BuilderText = ({ tagName = 'p', content, className, style, children, id, sectionId, suffix, isVisible = true, tooltipIfTruncated, onUpdate, ...rest }) => {
   if (!isVisible) return null;
   const Tag = tagName;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   const effectiveSuffix = suffix || (className ? className.split(' ')[0] : tagName);
   let finalId = id || (normalizedSectionId ? normalizedSectionId + '-' + effectiveSuffix : undefined);
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
-
   const finalClassName = ("builder-text " + (className || '') + " " + (!content && !children ? 'empty-builder-text' : '')).trim();
   const title = tooltipIfTruncated ? content : undefined;
-
-  // Pattern: If content is a simple string with no HTML, render directly to avoid React 19 dangerouslySetInnerHTML conflicts
-  const isSimpleString = content && typeof content === 'string' && !/<[a-z][sS]*>/i.test(content);
-
+  const isSimpleString = content && typeof content === 'string' && !/<[a-z]|&[a-z0-9#]+;/i.test(content);
   return (
     <Tag
       id={finalId}
@@ -85,23 +65,13 @@ const BuilderText = ({ tagName = 'p', content, className, style, children, id, s
   );
 };
 
-// Shim for BuilderButton
-const BuilderButton = ({ label, href, className, style, children, linkType, targetDialogId, id, sectionId, suffix, iconLeft, iconRight, hideLabel, isVisible = true }) => {
+const BuilderButton = ({ label, href, className, style, children, linkType, targetDialogId, id, sectionId, suffix, iconLeft, iconRight, hideLabel, isVisible = true, onUpdate, ...rest }) => {
   if (!isVisible) return null;
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   let finalId = id || (normalizedSectionId && suffix ? normalizedSectionId + '-' + suffix : undefined);
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
-
-  // Resolve Icons (Lightweight Fallback)
-  const renderIcon = (icon) => {
-      if (!icon) return null;
-      // In exported mode, icons are handled via props if they were passed as JSX, 
-      // or we can add a simple lookup if needed.
-      return icon;
-  };
-
-  const isSimpleLabel = label && typeof label === 'string' && !/<[a-z][sS]*>/i.test(label);
-
+  const renderIcon = (icon) => icon;
+  const isSimpleLabel = label && typeof label === 'string' && !/<[a-z]|&[a-z0-9#]+;/i.test(label);
   const content = (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', gap: 'inherit' }}>
          {renderIcon(iconLeft) && <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>{renderIcon(iconLeft)}</span>}
@@ -113,35 +83,12 @@ const BuilderButton = ({ label, href, className, style, children, linkType, targ
          {renderIcon(iconRight) && <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>{renderIcon(iconRight)}</span>}
       </div>
   );
-
   if (linkType === 'dialog' && targetDialogId) {
     return (
-      <a
-        id={finalId}
-        href="#"
-        className={className}
-        style={{ ...style, cursor: 'pointer', textDecoration: 'none' }}
-        rel="noopener"
-        onClick={(e) => {
-             e.preventDefault();
-             openDialog(targetDialogId);
-        }}
-      >
-        {content}
-      </a>
+      <a id={finalId} href="#" className={className} style={{ ...style, cursor: 'pointer', textDecoration: 'none' }} rel="noopener" onClick={(e) => { e.preventDefault(); openDialog(targetDialogId); }}>{content}</a>
     );
   }
-  return (
-    <a
-      id={finalId}
-      href={href || '#'} 
-      className={className} 
-      style={style}
-      rel="noopener"
-    >
-        {content}
-    </a>
-  );
+  return <a id={finalId} href={href || '#'} className={className} style={style} rel="noopener">{content}</a>;
 };
 
 export default function OsmBanner({
@@ -155,6 +102,7 @@ export default function OsmBanner({
     buttonIconRight = componentDefaults["osm-banner"].buttonIconRight,
     buttonId,
     buttonVisible = componentDefaults["osm-banner"].buttonVisible,
+    variant = componentDefaults["osm-banner"].variant,
 
     isOverlay, // Added
     onUpdate,
@@ -201,12 +149,15 @@ export default function OsmBanner({
     return (
         <BuilderSection
             tagName="div"
-            className={`${styles.banner} z-content-1 ${className}`}
+            className={`${styles.banner} ${styles[variant]} z-content-1 ${className}`}
             sectionId={sectionId}
-
             isOverlay={isOverlay}
             showFullWidthControl={false}
             fullWidth={true}
+            showVariantToggle={true}
+            variant={variant}
+            variants={["neutral", "brand"]}
+            onVariantChange={update('variant')}
         >
             <div className="container-grid">
                 <div className="grid align-center">
@@ -242,19 +193,13 @@ export default function OsmBanner({
                                 isVisible={buttonVisible}
                                 sectionId={sectionId}
                                 className="btn btn-outline btn-sm"
-                                onLabelChange={update('buttonText')}
-                                onHrefChange={update('buttonUrl')}
-                                onVisibilityChange={update('buttonVisible')}
                                 linkType={buttonLinkType}
-                                onLinkTypeChange={update('buttonLinkType')}
                                 targetDialogId={buttonTargetDialogId}
-                                onTargetDialogIdChange={update('buttonTargetDialogId')}
                                 iconLeft={buttonIconLeft}
                                 iconRight={buttonIconRight}
                                 onIconLeftChange={update('buttonIconLeft')}
                                 onIconRightChange={update('buttonIconRight')}
                                 id={buttonId}
-                                onIdChange={update('buttonId')}
                                 suffix="button"
                             />
                         )}

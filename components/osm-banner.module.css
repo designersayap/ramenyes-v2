@@ -1,13 +1,19 @@
 .banner {
-
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--background-neutral--neutral-strong);
     padding: var(--padding-xs) 0;
     min-height: 52px;
     width: 100%;
     position: relative;
+}
+
+.banner.neutral {
+    background-color: var(--background-neutral--neutral-strong);
+}
+
+.banner.brand {
+    background-color: var(--background-brand--brand-strong);
 }
 
 .content {
@@ -21,10 +27,17 @@
 }
 
 .title {
-    color: var(--content-neutral--body-invert);
     margin: 0;
     text-align: left;
     white-space: nowrap;
+}
+
+.neutral .title {
+    color: var(--content-neutral--body-invert);
+}
+
+.brand .title {
+    color: var(--content-neutral--body-invert);
 }
 
 .marqueeWrapper {

@@ -105,15 +105,14 @@
 .card {
     width: 100%;
     position: relative;
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     box-shadow: var(--shadow--md);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
     background: transparent;
-    border: 2px solid var(--stroke-card);
     outline: 1px solid transparent;
     isolation: isolate;
     transform: translateZ(0);
