@@ -27,7 +27,7 @@ export const metadata = {
   description: "Berkah Ekonomi - Solusi Rumah Nyaman untuk keluarga Indonesia. Menangkan hadiah Umroh dan Logam Mulia dari Sabun Ekonomi.",
   robots: { index: true, follow: true },
   keywords: "Sabun Ekonomi, Berkah Ekonomi, Undian Berhadiah, Umroh, Emas, Logam Mulia, Solusi Rumah Nyaman",
-  icons: { icon: "http://space.lunaaar.site/berkah-ekonomi/navigasi-logo.ico" },
+  icons: { icon: "https://space.lunaaar.site/berkah-ekonomi/navigasi-logo.ico" },
   alternates: { canonical: "https://berkah-umroh.sabunkrimekonomi.id/" },
   openGraph: {
     title: "Berkah Ekonomi - Gebyar Berkah Umroh Pesta Emas",

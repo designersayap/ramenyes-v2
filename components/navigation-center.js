@@ -145,7 +145,12 @@ const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href
           onPlay={() => setIsPlaying(true)} 
           onPause={() => setIsPlaying(false)}
         >
-          {src && <source src={(src && !src.startsWith('http') ? encodeURI(src) : src) + (!isAutoplay ? "#t=0.001" : "")} />}
+          {shouldLoad && (
+            <>
+              {mobileSrc && <source src={mobileSrc && !mobileSrc.startsWith('http') ? encodeURI(mobileSrc) : mobileSrc} media="(max-width: 767px)" />}
+              {src && <source src={(src && !src.startsWith('http') ? encodeURI(src) : src) + (!isAutoplay ? "#t=0.001" : "")} />}
+            </>
+          )}
         </video>
         {!isPlaying && (
           <button type="button" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(0,0,0,0.6)', borderRadius: '50%', width: '64px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, border: 'none' }} onClick={(e) => { e.preventDefault(); if (videoRef.current) videoRef.current.play(); }}>
@@ -155,7 +160,15 @@ const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href
       </>
     );
   } else {
-    mediaContent = shouldLoad ? <img src={src || "https://space.lunaaar.site/assets-lunar/placeholder.svg"} alt={effectiveAlt} className={mediaClass} style={mediaStyle} loading={priority ? "eager" : "lazy"} /> : <div className={mediaClass} style={mediaStyle} />;
+    const imgContent = <img src={src || "https://space.lunaaar.site/assets-lunar/placeholder.svg"} alt={effectiveAlt} className={mediaClass} style={mediaStyle} loading={priority ? "eager" : "lazy"} />;
+    mediaContent = shouldLoad ? (
+      mobileSrc ? (
+        <picture style={{ display: 'contents' }}>
+          <source media="(max-width: 767px)" srcSet={mobileSrc} />
+          {imgContent}
+        </picture>
+      ) : imgContent
+    ) : <div className={mediaClass} style={mediaStyle} />;
   }
 
   const wrapperStyle = { display: 'block', width: '100%', height: '100%', position: 'relative', overflow: 'hidden', ...style };
