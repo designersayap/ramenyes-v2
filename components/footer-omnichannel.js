@@ -152,6 +152,13 @@ const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href
           preload={!isAutoplay ? "auto" : (shouldLoad ? "metadata" : "none")} 
           onPlay={() => setIsPlaying(true)} 
           onPause={() => setIsPlaying(false)}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (videoRef.current && !videoRef.current.paused) {
+              videoRef.current.pause();
+            }
+          }}
         >
           {shouldLoad && (
             <>
@@ -161,7 +168,7 @@ const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href
           )}
         </video>
         {!isPlaying && (
-          <button type="button" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(0,0,0,0.6)', borderRadius: '50%', width: '64px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, border: 'none' }} onClick={(e) => { e.preventDefault(); if (videoRef.current) videoRef.current.play(); }}>
+          <button type="button" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'rgba(0,0,0,0.6)', borderRadius: '50%', width: '64px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 10, border: 'none' }} onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (videoRef.current) videoRef.current.play(); }}>
             <PlayIcon style={{ color: 'white', width: '32px', height: '32px' }} />
           </button>
         )}
