@@ -21,6 +21,7 @@ const poppins = localFont({
   display: "swap",
 });
 import Script from "next/script";
+import CookieBanner from "@/components/CookieBanner";
 
 export const metadata = {
   title: "Krim Ekonomi gebyar-berkah-umroh",
@@ -62,9 +63,24 @@ export default function RootLayout({ children }) {
         <link rel="preload" as="image" href="https://space.lunaaar.site/berkah-ekonomi/navigasi-logo.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="https://space.lunaaar.site/berkah-ekonomi/features-syarat-ketentuan.webp" fetchPriority="high" />
         
+
+        {/* Google Consent Mode v2 Default State */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied',
+            'analytics_storage': 'denied',
+            'wait_for_update': 500
+          });
+          window.gtag = gtag;
+        `}} />
       </head>
       <body>
         {children}
+        <CookieBanner />
         
         {/* Analytics Scripts */}
         

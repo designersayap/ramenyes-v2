@@ -1962,6 +1962,42 @@ strong {
 
 /* Typography Defaults (Restored for Export) - REMOVED (Handled by Component Styles) */
 
+/* Cookie Banner (Rover Design System) */
+.cookie-banner {
+    position: fixed;
+    bottom: var(--spacing-neutral--32, 24px);
+    left: var(--spacing-neutral--32, 24px);
+    right: var(--spacing-neutral--32, 24px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.cookie-banner-card {
+    background-color: var(--background-neutral--default, #ffffff);
+    color: var(--content-neutral--body, #1a1a1a);
+    padding: var(--spacing-neutral--24, 24px);
+    border-radius: var(--radius-neutral--24, 24px);
+    box-shadow: var(--shadow-neutral--lg, 0 20px 25px -5px rgba(0, 0, 0, 0.1));
+    border: 1px solid var(--stroke-neutral--neutral, #e5e7eb);
+    max-width: 360px;
+    width: 100%;
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-neutral--16, 16px);
+    font-family: inherit;
+}
+
+
+.cookie-banner-actions {
+    display: flex;
+    gap: var(--spacing-neutral--12, 12px);
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
 
 /*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[3].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[14].oneOf[3].use[2]!./node_modules/next/font/local/target.css?{"path":"app/layout.js","import":"","arguments":[{"src":[{"path":"../public/fonts/Lato-Bold.ttf","weight":"700","style":"normal"},{"path":"../public/fonts/Lato-Regular.ttf","weight":"400","style":"normal"}],"variable":"--font-lato","display":"swap"}],"variableName":"lato"} ***!
