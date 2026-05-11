@@ -140,29 +140,29 @@ jobs:
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | \
             docker login --username AWS --password-stdin ${{ needs.setup-environment.outputs.ecr-registry }}
 
-      #- name: Create .env file from Secrets Manager
-      #  run: |
-      #    ENV=${{ needs.setup-environment.outputs.environment }}
-      #    REPO_NAME=${{ env.REPO_NAME }}
-      #    if [[ "$ENV" == "dev" || "$ENV" == "uat" ]]; then
-      #      SECRET_NAME="/ecs/$REPO_NAME/$ENV"
-      #    else
-      #      SECRET_NAME="/ecs/$REPO_NAME/prod"
-      #    fi
-      #    touch .env
-      #    aws secretsmanager get-secret-value \
-      #      --secret-id "$SECRET_NAME" \
-      #      --query 'SecretString' \
-      #      --output text \
-      #      --region '${{ env.AWS_REGION }}' | \
-      #    jq -r 'to_entries[] | "\(.key)=\(.value)"' >> .env
-      #    echo "✓ Successfully created .env file for $ENV environment"
-      #    echo "Total environment variables: $(wc -l < .env)"
-      #    if [[ "$ENV" == "dev" ]]; then
-      #      echo "----- .env content (dev branch only) -----"
-      #      cat .env
-      #      echo "------------------------------------------"
-      #    fi
+      - name: Create .env file from Secrets Manager
+        run: |
+          ENV=${{ needs.setup-environment.outputs.environment }}
+          REPO_NAME=${{ env.REPO_NAME }}
+          if [[ "$ENV" == "dev" || "$ENV" == "uat" ]]; then
+            SECRET_NAME="/ecs/smu-berkahekonomi-fe/$ENV"
+          else
+            SECRET_NAME="/ecs/smu-berkahekonomi-fe/prod"
+          fi
+          touch .env
+          aws secretsmanager get-secret-value \
+            --secret-id "$SECRET_NAME" \
+            --query 'SecretString' \
+            --output text \
+            --region '${{ env.AWS_REGION }}' | \
+          jq -r 'to_entries[] | "\(.key)=\(.value)"' >> .env
+          echo "✓ Successfully created .env file for $ENV environment"
+          echo "Total environment variables: $(wc -l < .env)"
+          if [[ "$ENV" == "dev" ]]; then
+            echo "----- .env content (dev branch only) -----"
+            cat .env
+            echo "------------------------------------------"
+          fi
 
       - name: Build Docker image
         env:
