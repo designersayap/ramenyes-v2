@@ -21,6 +21,12 @@
     word-break: break-word;
     filter:
         drop-shadow(1px 1px 0 var(--stroke-content--title)) drop-shadow(1px -1px 0 var(--stroke-content--title)) drop-shadow(-1px 1px 0 var(--stroke-content--title)) drop-shadow(-1px -1px 0 var(--stroke-content--title)) drop-shadow(1px 0 0 var(--stroke-content--title)) drop-shadow(-1px 0 0 var(--stroke-content--title)) drop-shadow(0 1px 0 var(--stroke-content--title)) drop-shadow(0 -1px 0 var(--stroke-content--title));
+    caret-color: var(--content-neutral--body);
+}
+
+.title span[style*="color"] {
+    -webkit-text-fill-color: initial !important;
+    background: none !important;
 }
 
 .subtitle {

@@ -357,7 +357,7 @@ export default function NavigationCenter({
     return (
         <BuilderSection
             tagName="nav"
-            className={`${styles.navigationWrapper} z-content-1 ${isScrolled ? styles.scrolled : ''} ${menuColor === 'invert' ? styles.invert : ''}`}
+            className={`${styles.navigationWrapper} z-content-1 ${isScrolled ? styles.scrolled : ''} ${isOverlay ? styles.overlay : ''} ${menuColor === 'invert' ? styles.invert : ''}`}
             sectionId={sectionId}
             isOverlay={isOverlay}
             menuColor={menuColor}
@@ -432,33 +432,35 @@ export default function NavigationCenter({
                     ))}
 
                     {/* Mobile Layout */}
-                    <div className={`col-mobile-2 col-tablet-4 ${styles.mobileNav} ${styles.mobileLogoWrapper}`}>
-                        <div className={styles.logoContainer}>
-                            <BuilderImage
-                                src={logo}
-                                id={logoId}
-                                isVisible={logoVisible}
-                                readOnly={true}
-                                className={styles.logoImage}
-                                style={logoStyle}
-                            />
-                        </div>
-                    </div>
-
                     {(() => {
                         const hasVisibleMenu = menuItems.some(item => item.visible);
 
                         return (
-                            <div className={`col-mobile-2 col-tablet-4 ${styles.mobileNav} ${styles.mobileBurgerWrapper}`}>
+                            <>
+                                <div className={`${hasVisibleMenu ? 'col-mobile-2 col-tablet-4' : 'col-mobile-4 col-tablet-8'} ${styles.mobileNav} ${styles.mobileLogoWrapper} ${!hasVisibleMenu ? styles.mobileLogoCenter : ''}`}>
+                                    <div className={styles.logoContainer}>
+                                        <BuilderImage
+                                            src={logo}
+                                            id={logoId}
+                                            isVisible={logoVisible}
+                                            readOnly={true}
+                                            className={styles.logoImage}
+                                            style={logoStyle}
+                                        />
+                                    </div>
+                                </div>
+
                                 {hasVisibleMenu && (
-                                    <button
-                                        className={styles.burgerButton}
-                                        onClick={() => setIsMobileMenuOpen(true)}
-                                    >
-                                        <Bars3Icon style={{ width: 24, height: 24 }} />
-                                    </button>
+                                    <div className={`col-mobile-2 col-tablet-4 ${styles.mobileNav} ${styles.mobileBurgerWrapper}`}>
+                                        <button
+                                            className={styles.burgerButton}
+                                            onClick={() => setIsMobileMenuOpen(true)}
+                                        >
+                                            <Bars3Icon style={{ width: 24, height: 24 }} />
+                                        </button>
+                                    </div>
                                 )}
-                            </div>
+                            </>
                         );
                     })()}
 

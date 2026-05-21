@@ -1,7 +1,37 @@
 .footer {
     width: 100%;
     padding: var(--padding-md) 0 0;
-    color: var(--content-neutral--body-default);
+}
+
+.invert {
+    color: var(--content-neutral--body-invert);
+}
+
+.invert .columnTitle {
+    color: var(--content-neutral--body-invert);
+}
+
+.invert .linkFooter {
+    color: var(--content-neutral--body-invert) !important;
+}
+
+.invert .linkFooter:hover {
+    color: var(--content-neutral--body-invert) !important;
+    opacity: 0.8;
+}
+
+.invert .divider {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.invert .copyright,
+.invert .legalLink {
+    color: var(--content-neutral--body-invert) !important;
+}
+
+.invert .legalLink:hover {
+    color: var(--content-neutral--body-invert) !important;
+    opacity: 0.8;
 }
 
 .leftColumn {
@@ -97,7 +127,7 @@
     color: var(--content-neutral--body-default) !important;
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
     .bottomBar {
         text-align: left;
         padding: 0;

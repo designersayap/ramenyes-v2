@@ -19,6 +19,37 @@
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
 }
 
+.navigationWrapper.overlay {
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.navigationWrapper.overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    /* Blend to image effect */
+    mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+    z-index: -1;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.navigationWrapper.overlay.scrolled {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.navigationWrapper.overlay.scrolled::before {
+    opacity: 0;
+}
+
 .mobileNav {
     display: none !important;
 }
@@ -64,13 +95,12 @@
     color: var(--content-neutral--body);
 }
 
-.invert .linkNav {
+.invert:not(.scrolled) .linkNav {
     color: var(--content-neutral--body-invert);
 }
 
-.invert .linkNav:hover {
+.invert:not(.scrolled) .linkNav:hover {
     color: var(--content-neutral--body-invert);
-    /* Keep it white on hover too? or maybe slight opacity? */
     opacity: 0.8;
 }
 
@@ -93,7 +123,7 @@
     color: var(--content-neutral--button--outline);
 }
 
-.invert .burgerButton {
+.invert:not(.scrolled) .burgerButton {
     color: var(--content-neutral--body-invert);
 }
 
@@ -101,6 +131,10 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+}
+
+.mobileLogoCenter {
+    justify-content: center;
 }
 
 

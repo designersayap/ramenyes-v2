@@ -45,6 +45,13 @@ export default function StickyManager({ children, stickyIndices = [], stackedInd
 
         const resizeObserver = new ResizeObserver(() => {
             updateOffsets();
+            // Update overlay margins on height change
+            overlayIndices.forEach(index => {
+                const el = refs.current[index];
+                if (el) {
+                    el.style.marginBottom = `-${el.offsetHeight}px`;
+                }
+            });
         });
 
         stickyIndices.forEach(index => {
@@ -133,16 +140,22 @@ export default function StickyManager({ children, stickyIndices = [], stackedInd
             window.removeEventListener('resize', throttledScroll);
             if (rafId) cancelAnimationFrame(rafId);
         };
-    }, [JSON.stringify(stackedIndices), JSON.stringify(blurIndices)]);
+    }, [stackedIndices.join(','), blurIndices.join(',')]);
 
     // Fix Hydration Mismatch for Overlay Margin
     useEffect(() => {
-        overlayIndices.forEach(index => {
-            const el = refs.current[index];
-            if (el) {
-                el.style.marginBottom = `-${el.offsetHeight}px`;
-            }
-        });
+        const updateMargins = () => {
+            overlayIndices.forEach(index => {
+                const el = refs.current[index];
+                if (el) {
+                    el.style.marginBottom = `-${el.offsetHeight}px`;
+                }
+            });
+        };
+        updateMargins();
+        // Also trigger on load to ensure images/logos are accounted for
+        window.addEventListener('load', updateMargins);
+        return () => window.removeEventListener('load', updateMargins);
     }, [overlayIndices, children]);
 
     let forceWhite = false;
@@ -164,7 +177,7 @@ export default function StickyManager({ children, stickyIndices = [], stackedInd
                 // 3. Stacked Sections: Should be behind following sections (index)
                 
                 let zIndex = 10 + index;
-                if (isSticky && !isStacked && !isOverlay) {
+                if (isSticky && !isStacked) {
                     zIndex = 1000; // Navigation stays on top
                 } else if (isStacked) {
                     zIndex = 1 + index; // Stacked stays behind its followers
@@ -176,10 +189,9 @@ export default function StickyManager({ children, stickyIndices = [], stackedInd
                 }
 
                 if (isStacked) {
-                    // If Blur is Enabled, we DON'T force white from the manager. 
-                    // We let the ScrollGroup handle the dynamic transparent->white transition.
-                    // If Blur is Disabled, we force white immediately for all following sections.
-                    forceWhite = !isBlurred;
+                    // Once we hit a stacked section, all subsequent non-stacked sections
+                    // must be opaque to hide the sticky background as they slide over.
+                    forceWhite = true;
                 }
 
                 return (

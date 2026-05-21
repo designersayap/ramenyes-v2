@@ -1,10 +1,9 @@
 "use client";
-import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import styles from "./footer-omnichannel.module.css";
-const DEFAULT_PLACEHOLDER_IMAGE = "";
 import { componentDefaults } from "./data";
 import { createUpdateHandler } from "./component-helpers";
+import React, { useState, useEffect, useRef } from 'react';
 
 
 const openDialog = (id) => {
@@ -21,12 +20,25 @@ const openDialog = (id) => {
 };
 const PlayIcon = ({ style }) => <svg style={style} fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>;
 
-const getContainerClasses = ({ removePaddingLeft, removePaddingRight, fullWidth }) => {
-  const classes = ["container-grid"];
-  if (removePaddingLeft) classes.push("pl-0");
-  if (removePaddingRight) classes.push("pr-0");
-  if (fullWidth) classes.push("container-full");
-  return classes.join(" ");
+const BuilderSection = ({ tagName = 'div', className, innerContainer, fullWidth, style, children, id, sectionId, isVisible = true, removePaddingLeft, removePaddingRight, onUpdate, ...rest }) => {
+  if (!isVisible) return null;
+  const Tag = tagName;
+  const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
+  let finalId = id || normalizedSectionId;
+  finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
+  const containerClasses = ["container-grid"];
+  if (removePaddingLeft === true || removePaddingLeft === "true") containerClasses.push("pl-0");
+  if (removePaddingRight === true || removePaddingRight === "true") containerClasses.push("pr-0");
+  if (fullWidth === true || fullWidth === "true") containerClasses.push("container-full");
+  const containerClass = containerClasses.join(" ");
+  if (innerContainer) {
+    return (
+      <Tag id={finalId} className={className} style={style}>
+        <div className={containerClass}>{children}</div>
+      </Tag>
+    );
+  }
+  return <Tag id={finalId} className={containerClass + " " + (className || '')} style={style}>{children}</Tag>;
 };
 
 const BuilderText = ({ tagName = 'p', content, className, style, children, id, sectionId, suffix, isVisible = true, tooltipIfTruncated, onUpdate, ...rest }) => {
@@ -193,24 +205,6 @@ const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href
   return <div ref={wrapperRef} className={baseClassName} style={wrapperStyle}>{mediaContent}</div>;
 };
 
-const SocialIcons = {
-    facebook: (
-        <div className={`${styles.socialIcon} icon-social-mask icon-social-facebook`} />
-    ),
-    twitter: (
-        <div className={`${styles.socialIcon} icon-social-mask icon-social-x`} />
-    ),
-    instagram: (
-        <div className={`${styles.socialIcon} icon-social-mask icon-social-instagram`} />
-    ),
-    tiktok: (
-        <div className={`${styles.socialIcon} icon-social-mask icon-social-tiktok`} />
-    ),
-    youtube: (
-        <div className={`${styles.socialIcon} icon-social-mask icon-social-youtube`} />
-    ),
-};
-
 export default function FooterOmnichannel({
     image = componentDefaults["footer-omnichannel"].image,
     imageId,
@@ -226,15 +220,26 @@ export default function FooterOmnichannel({
     fullWidth,
     removePaddingLeft,
     removePaddingRight,
-    imageShowStroke
+    imageShowStroke,
+    menuColor = componentDefaults["footer-omnichannel"].menuColor
 }) {
     const update = createUpdateHandler(onUpdate);
     const defaults = componentDefaults["footer-omnichannel"];
 
     return (
-        <footer className={styles.footer} id={sectionId}>
-            <div className={getContainerClasses({ fullWidth, removePaddingLeft, removePaddingRight })}>
-                <div className={`grid items-center-desktop`}>
+        <BuilderSection
+            tagName="footer"
+            sectionId={sectionId}
+            className={`${styles.footer} ${menuColor === 'invert' ? styles.invert : ''}`}
+            showMenuColorToggle={true}
+            showFullWidthControl={false}
+            menuColor={menuColor}
+            fullWidth={fullWidth}
+            removePaddingLeft={removePaddingLeft}
+            removePaddingRight={removePaddingRight}
+        >
+            <div className="container-grid">
+                <div className="grid">
                     {/* Left Column: Logo */}
                     <div className={`col-mobile-4 col-tablet-8 col-desktop-6`}>
                         <div className={styles.leftColumn}>
@@ -492,7 +497,7 @@ export default function FooterOmnichannel({
                     </div>
                 </div>
             </div>
-        </footer>
+        </BuilderSection>
     );
 }
 

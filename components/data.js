@@ -69,6 +69,7 @@ export const componentDefaults = {
     },
     "footer-omnichannel": {
         image: "",
+        menuColor: "default",
         copyrightText: "Copyright © [brand_name] 2026",
         availableAtTitle: "Available At",
         resourcesTitle: "Follow Us",
@@ -127,6 +128,7 @@ export const componentDefaults = {
 
     "footer-basic": {
         image: "",
+        menuColor: "default",
         copyrightText: "Copyright © [brand_name] 2026",
         resourceLinks: [
             { label: 'Privacy Policy', url: '', visible: true, id: '', linkType: 'url', targetDialogId: '' },
