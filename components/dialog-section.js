@@ -85,7 +85,7 @@ const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href
   let baseClassName = (className || '') + ' builder-image-container' + (isStrokeEnabled ? ' has-stroke' : '');
   if (mobileRatio) baseClassName += " mobile-aspect-" + mobileRatio;
 
-  const mediaStyle = { width: "100%", height: "100%", objectFit: "cover", display: "block", ...style };
+  const mediaStyle = { width: "100%", height: "100%", objectFit: ((className || '').includes('navigation') || (className || '').includes('logo') || (className || '').includes('object-contain')) ? 'contain' : 'cover', display: "block", ...style };
   const mediaClass = 'builder-image-media';
 
   const getYoutubeEmbedUrl = (url) => {
@@ -305,7 +305,7 @@ export default function DialogSection({
 
                             <BuilderImage
                                 className={`${styles.imageContainer} imagePlaceholder-16-9`}
-                                style={{ minHeight: '180px', backgroundColor: 'var(--background-neutral--neutral-subtle)' }}
+                                style={{ minHeight: '180px' }}
                                 src={image || DEFAULT_PLACEHOLDER_IMAGE}
                                 id={imageId}
                                 sectionId={sectionId}

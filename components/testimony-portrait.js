@@ -104,7 +104,7 @@ const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href
   let baseClassName = (className || '') + ' builder-image-container' + (isStrokeEnabled ? ' has-stroke' : '');
   if (mobileRatio) baseClassName += " mobile-aspect-" + mobileRatio;
 
-  const mediaStyle = { width: "100%", height: "100%", objectFit: "cover", display: "block", ...style };
+  const mediaStyle = { width: "100%", height: "100%", objectFit: ((className || '').includes('navigation') || (className || '').includes('logo') || (className || '').includes('object-contain')) ? 'contain' : 'cover', display: "block", ...style };
   const mediaClass = 'builder-image-media';
 
   const getYoutubeEmbedUrl = (url) => {
@@ -413,7 +413,6 @@ export default function TestimonyPortrait({
             marqueeDuration={marqueeDuration}
             marqueeDirection={marqueeDirection}
             imageShowStroke={isStrokeEnabled}
-            onShowStrokeChange={(val) => onUpdate({ imageShowStroke: val })}
         >
             <div className="grid">
                 <div className="col-mobile-4 col-tablet-8 col-desktop-12">
@@ -438,7 +437,6 @@ export default function TestimonyPortrait({
                                     className={styles.itemWrapper}
                                     id={item.cardId}
                                     sectionId={sectionId}
-                                    elementProps={`testimony-${index}`}
                                     isVisible={item.visible !== false}
                                 >
                                     <div className={styles.card}>

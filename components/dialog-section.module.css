@@ -23,6 +23,16 @@
     padding-bottom: var(--padding-sm);
 }
 
+:global(.success-dialog-overlay) .dialog {
+    max-width: 420px !important;
+}
+
+:global(.success-dialog-overlay) .dialog [class*="textContainer"] {
+    text-align: center;
+    align-items: center;
+}
+
+
 /* Controls & Content */
 .closeButton {
     position: sticky;
@@ -100,7 +110,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--background-neutral--neutral-subtle);
     border-top-left-radius: inherit; /* Match parent's rounded corners */
     border-top-right-radius: inherit;
     overflow: hidden;

@@ -119,7 +119,7 @@ const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href
   let baseClassName = (className || '') + ' builder-image-container' + (isStrokeEnabled ? ' has-stroke' : '');
   if (mobileRatio) baseClassName += " mobile-aspect-" + mobileRatio;
 
-  const mediaStyle = { width: "100%", height: "100%", objectFit: "cover", display: "block", ...style };
+  const mediaStyle = { width: "100%", height: "100%", objectFit: ((className || '').includes('navigation') || (className || '').includes('logo') || (className || '').includes('object-contain')) ? 'contain' : 'cover', display: "block", ...style };
   const mediaClass = 'builder-image-media';
 
   const getYoutubeEmbedUrl = (url) => {

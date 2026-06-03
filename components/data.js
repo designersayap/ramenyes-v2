@@ -233,7 +233,8 @@ export const componentDefaults = {
         genderFieldId: "gender-field",
         dobFieldId: "dob-field",
         marketingConsentId: "marketing-consent",
-        collectionConsentId: "collection-consent"
+        collectionConsentId: "collection-consent",
+        outputProvider: "webhook"
     },
     "form-personal-data-section": {
         marketingConsentLabel: "I agree to receive information about exciting offers, product updates, and other information from [brand_name] and other Wings brands.",
@@ -251,7 +252,8 @@ export const componentDefaults = {
         genderFieldId: "gender-field",
         dobFieldId: "dob-field",
         marketingConsentId: "marketing-consent",
-        collectionConsentId: "collection-consent"
+        collectionConsentId: "collection-consent",
+        outputProvider: "webhook"
     },
     "osm-banner": {
         title: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",

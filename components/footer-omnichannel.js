@@ -129,7 +129,7 @@ const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href
   let baseClassName = (className || '') + ' builder-image-container' + (isStrokeEnabled ? ' has-stroke' : '');
   if (mobileRatio) baseClassName += " mobile-aspect-" + mobileRatio;
 
-  const mediaStyle = { width: "100%", height: "100%", objectFit: "cover", display: "block", ...style };
+  const mediaStyle = { width: "100%", height: "100%", objectFit: ((className || '').includes('navigation') || (className || '').includes('logo') || (className || '').includes('object-contain')) ? 'contain' : 'cover', display: "block", ...style };
   const mediaClass = 'builder-image-media';
 
   const getYoutubeEmbedUrl = (url) => {
@@ -277,57 +277,17 @@ export default function FooterOmnichannel({
                                             href={link.url}
                                             isVisible={link.visible}
                                             sectionId={sectionId}
-                                            onLabelChange={(val) => {
-                                                const newLinks = [...findUsOnLinks];
-                                                newLinks[index].label = val;
-                                                update('findUsOnLinks')(newLinks);
-                                            }}
-                                            onHrefChange={(val) => {
-                                                const newLinks = [...findUsOnLinks];
-                                                newLinks[index].url = val;
-                                                update('findUsOnLinks')(newLinks);
-                                            }}
                                             linkType={link.linkType}
-                                            onLinkTypeChange={(val) => {
-                                                const newLinks = [...findUsOnLinks];
-                                                newLinks[index].linkType = val;
-                                                update('findUsOnLinks')(newLinks);
-                                            }}
                                             targetDialogId={link.targetDialogId}
-                                            onTargetDialogIdChange={(val) => {
-                                                const newLinks = [...findUsOnLinks];
-                                                newLinks[index].targetDialogId = val;
-                                                update('findUsOnLinks')(newLinks);
-                                            }}
-                                            onIdChange={(val) => {
-                                                const newLinks = [...findUsOnLinks];
-                                                newLinks[index].id = val;
-                                                update('findUsOnLinks')(newLinks);
-                                            }}
-                                            onVisibilityChange={(val) => {
-                                                const newLinks = [...findUsOnLinks];
-                                                newLinks[index].visible = val;
-                                                update('findUsOnLinks')(newLinks);
-                                            }}
                                             justify="flex-start"
                                             iconLeft={
                                                 <div style={{ width: 16, height: 16, position: 'relative', overflow: 'hidden' }}>
                                                     <BuilderImage
                                                         src={link.image}
-                                                        onSrcChange={(val) => {
-                                                            const newLinks = [...findUsOnLinks];
-                                                            newLinks[index].image = val;
-                                                            update('findUsOnLinks')(newLinks);
-                                                        }}
                                                         id={link.imageId}
-                                                        onIdChange={(val) => {
-                                                            const newLinks = [...findUsOnLinks];
-                                                            newLinks[index].imageId = val;
-                                                            update('findUsOnLinks')(newLinks);
-                                                        }}
                                                         sectionId={sectionId}
                                                         suffix={`available-at-icon-${index}`}
-                                                        className="object-contain"
+                                                        className="object-cover"
                                                         style={{ width: '100%', height: '100%' }}
                                                         showLinkControls={false}
                                                     />
@@ -364,57 +324,17 @@ export default function FooterOmnichannel({
                                             href={link.url}
                                             isVisible={link.visible}
                                             sectionId={sectionId}
-                                            onLabelChange={(val) => {
-                                                const newLinks = [...socialLinks];
-                                                newLinks[index].label = val;
-                                                update('socialLinks')(newLinks);
-                                            }}
-                                            onHrefChange={(val) => {
-                                                const newLinks = [...socialLinks];
-                                                newLinks[index].url = val;
-                                                update('socialLinks')(newLinks);
-                                            }}
                                             linkType={link.linkType}
-                                            onLinkTypeChange={(val) => {
-                                                const newLinks = [...socialLinks];
-                                                newLinks[index].linkType = val;
-                                                update('socialLinks')(newLinks);
-                                            }}
                                             targetDialogId={link.targetDialogId}
-                                            onTargetDialogIdChange={(val) => {
-                                                const newLinks = [...socialLinks];
-                                                newLinks[index].targetDialogId = val;
-                                                update('socialLinks')(newLinks);
-                                            }}
-                                            onIdChange={(val) => {
-                                                const newLinks = [...socialLinks];
-                                                newLinks[index].id = val;
-                                                update('socialLinks')(newLinks);
-                                            }}
-                                            onVisibilityChange={(val) => {
-                                                const newLinks = [...socialLinks];
-                                                newLinks[index].visible = val;
-                                                update('socialLinks')(newLinks);
-                                            }}
                                             justify="flex-start"
                                             iconLeft={
                                                 <div style={{ width: 16, height: 16, position: 'relative', overflow: 'hidden' }}>
                                                     <BuilderImage
                                                         src={link.image}
-                                                        onSrcChange={(val) => {
-                                                            const newLinks = [...socialLinks];
-                                                            newLinks[index].image = val;
-                                                            update('socialLinks')(newLinks);
-                                                        }}
                                                         id={link.imageId}
-                                                        onIdChange={(val) => {
-                                                            const newLinks = [...socialLinks];
-                                                            newLinks[index].imageId = val;
-                                                            update('socialLinks')(newLinks);
-                                                        }}
                                                         sectionId={sectionId}
                                                         suffix={`social-icon-${index}`}
-                                                        className="object-contain"
+                                                        className="object-cover"
                                                         style={{ width: '100%', height: '100%' }}
                                                         showLinkControls={false}
                                                     />
@@ -460,33 +380,8 @@ export default function FooterOmnichannel({
                                         href={link.url}
                                         isVisible={link.visible}
                                         sectionId={sectionId}
-                                        onLabelChange={(val) => {
-                                            const newLinks = [...resourceLinks];
-                                            newLinks[index].label = val;
-                                            update('resourceLinks')(newLinks);
-                                        }}
-                                        onHrefChange={(val) => {
-                                            const newLinks = [...resourceLinks];
-                                            newLinks[index].url = val;
-                                            update('resourceLinks')(newLinks);
-                                        }}
                                         linkType={link.linkType}
-                                        onLinkTypeChange={(val) => {
-                                            const newLinks = [...resourceLinks];
-                                            newLinks[index].linkType = val;
-                                            update('resourceLinks')(newLinks);
-                                        }}
                                         targetDialogId={link.targetDialogId}
-                                        onTargetDialogIdChange={(val) => {
-                                            const newLinks = [...resourceLinks];
-                                            newLinks[index].targetDialogId = val;
-                                            update('resourceLinks')(newLinks);
-                                        }}
-                                        onVisibilityChange={(val) => {
-                                            const newLinks = [...resourceLinks];
-                                            newLinks[index].visible = val;
-                                            update('resourceLinks')(newLinks);
-                                        }}
                                         className={`${styles.legalLink} caption-regular`}
                                         suffix={`legal-${index + 1}`}
                                         justify="flex-start"

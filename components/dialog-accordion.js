@@ -85,7 +85,6 @@ const AccordionItem = memo(({
             className={styles.accordionItem}
             sectionId={sectionId}
             id={itemId}
-            elementProps={`accordion-${index}`}
         >
             <button
                 className={styles.accordionHeader}
