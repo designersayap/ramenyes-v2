@@ -32,7 +32,7 @@ export const metadata = {
   openGraph: {
     title: "Berkah Ekonomi - Gebyar Berkah Umroh Pesta Emas",
     description: "Menangkan hadiah Umroh dan Emas dari Sabun Ekonomi. Solusi hemat dan bersih untuk keluarga",
-    images: [{ url: "https://res.cloudinary.com/dp3tcw3wj/image/upload/v1769656055/banner-testimonial-placeholder-desktop_cyvdie.webp" }],
+    images: [{ url: "https://space.lunaaar.site/berkah-ekonomi/media-footer_20260603_140602.webp" }],
   },
 };
 
@@ -52,7 +52,7 @@ export default function RootLayout({ children }) {
         <link rel="canonical" href="https://berkah-umroh.sabunkrimekonomi.id/" />
         <meta property="og:title" content="Berkah Ekonomi - Gebyar Berkah Umroh Pesta Emas" />
         <meta property="og:description" content="Menangkan hadiah Umroh dan Emas dari Sabun Ekonomi. Solusi hemat dan bersih untuk keluarga" />
-        <meta property="og:image" content="https://res.cloudinary.com/dp3tcw3wj/image/upload/v1769656055/banner-testimonial-placeholder-desktop_cyvdie.webp" />
+        <meta property="og:image" content="https://space.lunaaar.site/berkah-ekonomi/media-footer_20260603_140602.webp" />
 
         {/* Preconnect to Font domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
