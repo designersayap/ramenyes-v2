@@ -152,7 +152,7 @@ export default function ExportedPage() {
       />
       <HeaderSection
         title={"Daftar Pemenang"}
-        subtitle={"Periode Maret-April 2026"}
+        subtitle={"Periode April - Mei 2026"}
         buttonStyle={"primary"}
         buttonText={"Label"}
         buttonUrl={""}
