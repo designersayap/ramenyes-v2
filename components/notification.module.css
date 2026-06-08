@@ -1,0 +1,97 @@
+.notificationContainer {
+    position: fixed;
+    bottom: var(--space-80, 16px);
+    right: var(--space-80, 16px);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--space-60, 8px);
+    pointer-events: none;
+    max-width: 400px;
+    width: calc(100% - 32px);
+}
+
+.notificationCard {
+    background-color: var(--background-brand--positive-strong, #2BAA66);
+    color: var(--content-neutral--body-invert, #ffffff);
+    padding: var(--space-70, 12px) var(--space-80, 16px);
+    border-radius: var(--round-80, 12px);
+    box-shadow: var(--shadow--md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-70, 12px);
+    pointer-events: auto;
+    animation: slideIn 0.3s ease forwards;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.notificationCard.error {
+    background-color: var(--background-brand--negative-strong, #D32F2F);
+}
+
+.notificationContent {
+    flex: 1;
+    font-family: var(--font-family-body);
+    font-size: var(--typography-font-size-100, 16px);
+    line-height: var(--typography-line-height-100, 24px);
+    word-break: break-word;
+}
+
+.notificationLink {
+    color: var(--content-neutral--body-invert, #ffffff);
+    text-decoration: underline;
+    font-size: inherit;
+    font-weight: 600;
+    margin-left: 2px;
+}
+
+.notificationLink:hover {
+    opacity: 0.8;
+}
+
+.icon {
+    width: var(--size-icon-md, 20px);
+    height: var(--size-icon-md, 20px);
+    flex-shrink: 0;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    color: currentColor;
+    opacity: 0.7;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+}
+
+.closeButton:hover {
+    opacity: 1;
+}
+
+.closeIcon {
+    width: var(--size-icon-sm, 16px);
+    height: var(--size-icon-sm, 16px);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.fadeOut {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+}

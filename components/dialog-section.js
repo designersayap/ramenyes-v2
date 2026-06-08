@@ -167,6 +167,7 @@ export default function DialogSection({
     children,
     isOpen: controlledIsOpen,
     onUpdate,
+    onClose,
     sectionId,
 
     className = "",
@@ -204,12 +205,15 @@ export default function DialogSection({
 
     const toggleOpen = useCallback((value) => {
         const newValue = value === undefined ? !isOpen : value;
+        if (newValue === false && onClose) {
+            onClose();
+        }
         if (isControlled) {
             update('isOpen')(newValue);
         } else {
             setInternalIsOpen(newValue);
         }
-    }, [isControlled, update, isOpen]);
+    }, [isControlled, update, isOpen, onClose]);
 
     // 1. Lock Body Scroll when Open
     useEffect(() => {

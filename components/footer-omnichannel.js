@@ -294,7 +294,7 @@ export default function FooterOmnichannel({
                                                 </div>
                                             }
                                             className={`${styles.linkFooter} body-regular`}
-                                            suffix={`link-${index + 1}`}
+                                            suffix={`marketplace-${index + 1}`}
                                             fullWidth={true}
                                             tooltipIfTruncated={true}
                                         />

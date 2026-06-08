@@ -1944,6 +1944,15 @@ strong {
   isolation: isolate;
 }
 
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 
 /* Typography Defaults (Restored for Export) - REMOVED (Handled by Component Styles) */
 

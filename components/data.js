@@ -79,7 +79,7 @@ export const componentDefaults = {
             { label: '[social-link]', url: '', visible: true, id: '', image: '', imageId: '', linkType: 'url', targetDialogId: '' }
         ],
         findUsOnLinks: [{
-            label: "[marketplace_name]",
+            label: "[marketplace-name]",
             url: "",
             visible: true,
             id: "",
@@ -89,7 +89,7 @@ export const componentDefaults = {
             targetDialogId: ""
         },
         {
-            label: "[marketplace_name]",
+            label: "[marketplace-name]",
             url: "",
             visible: true,
             id: "",
@@ -99,7 +99,7 @@ export const componentDefaults = {
             targetDialogId: ""
         },
         {
-            label: "[marketplace_name]",
+            label: "[marketplace-name]",
             url: "",
             visible: true,
             id: "",
@@ -110,14 +110,14 @@ export const componentDefaults = {
         }
         ],
         resourceLinks: [{
-            label: "Terms & Conditions",
+            label: "[legal-link]",
             url: "", visible: true,
             id: "",
             linkType: "url",
             targetDialogId: ""
         },
         {
-            label: "Privacy Policy",
+            label: "[legal-link]",
             url: "", visible: true,
             id: "",
             linkType: "url",
@@ -131,8 +131,8 @@ export const componentDefaults = {
         menuColor: "default",
         copyrightText: "Copyright © [brand_name] 2026",
         resourceLinks: [
-            { label: 'Privacy Policy', url: '', visible: true, id: '', linkType: 'url', targetDialogId: '' },
-            { label: 'Terms & Condition', url: '', visible: true, id: '', linkType: 'url', targetDialogId: '' }
+            { label: '[legal-link]', url: '', visible: true, id: '', linkType: 'url', targetDialogId: '' },
+            { label: '[legal-link]', url: '', visible: true, id: '', linkType: 'url', targetDialogId: '' }
         ],
         contactLinks: [
             { label: '[social-link]', url: '', visible: true, id: '', image: '', imageId: '', linkType: 'url', targetDialogId: '' },
@@ -222,6 +222,7 @@ export const componentDefaults = {
         imageAutoplay: true,
         marketingConsentLabel: "I agree to receive information about exciting offers, product updates, and other information from [brand_name] and other Wings brands.",
         collectionConsentLabel: "I agree to allow Wings to manage my personal data in accordance with the Wings Privacy Policy.",
+        interestPromoLabel: "Which Wings promotion do you like most",
         nameVisible: true,
         emailVisible: true,
         whatsappVisible: true,
@@ -232,13 +233,22 @@ export const componentDefaults = {
         whatsappFieldId: "whatsapp-field",
         genderFieldId: "gender-field",
         dobFieldId: "dob-field",
+        interestPromoFieldId: "interest-promo-field",
         marketingConsentId: "marketing-consent",
         collectionConsentId: "collection-consent",
+        submitButtonText: "Submit",
+        submitButtonId: "submit-button",
+        successTitle: "Submission Successful!",
+        successDescription: "Thank you for submitting your details. Your response has been recorded successfully.",
+        successImage: "https://space.lunaaar.site/assets-template/illustration-success.webp",
+        successImageId: "success-image",
+        successClaimLabel: "Claim Number",
         outputProvider: "webhook"
     },
     "form-personal-data-section": {
         marketingConsentLabel: "I agree to receive information about exciting offers, product updates, and other information from [brand_name] and other Wings brands.",
         collectionConsentLabel: "I agree to allow Wings to manage my personal data in accordance with the Wings Privacy Policy.",
+        interestPromoLabel: "Which Wings promotion do you like most",
         nameVisible: true,
         emailVisible: true,
         whatsappVisible: true,
@@ -251,8 +261,16 @@ export const componentDefaults = {
         whatsappFieldId: "whatsapp-field",
         genderFieldId: "gender-field",
         dobFieldId: "dob-field",
+        interestPromoFieldId: "interest-promo-field",
         marketingConsentId: "marketing-consent",
         collectionConsentId: "collection-consent",
+        submitButtonText: "Submit",
+        submitButtonId: "submit-button",
+        successTitle: "Submission Successful!",
+        successDescription: "Thank you for submitting your details. Your response has been recorded successfully.",
+        successImage: "https://space.lunaaar.site/assets-template/illustration-success.webp",
+        successImageId: "success-image",
+        successClaimLabel: "Claim Number",
         outputProvider: "webhook"
     },
     "osm-banner": {

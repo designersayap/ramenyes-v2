@@ -14,6 +14,7 @@ const FooterOmnichannel = dynamic(() => import("@/components/footer-omnichannel.
 const DialogAccordion = dynamic(() => import("@/components/dialog-accordion.js"), { ssr: true });
 const FullBody = dynamic(() => import("@/components/full-body.js"), { ssr: true });
 import StickyManager from "@/utils/sticky-manager";
+import Notification from "@/components/notification";
 
 
 export default function ExportedPage() {
@@ -78,7 +79,7 @@ export default function ExportedPage() {
       />
       <HeaderSection
         title={"Total <span style=\"font-weight: normal;\">Hadiah</span> Miliaran Menantimu!"}
-        subtitle={"<div><b>Batas Penukaran Hadiah Sampai 31 Januari 2027</b></div><div>Beli Sabun Krim Ekonomi bertanda khusus, kirim kode uniknya ke WhatsApp WINGS Customer Care, atau klik tombol di bawah untuk klaim.</div>"}
+        subtitle={"<div><span style=\"background-color: transparent;\"><b>Batas Penukaran Hadiah Sampai 31 JULI 2026</b></span></div><div><span style=\"background-color: transparent;\">Beli Sabun Krim Ekonomi bertanda khusus, kirim kode uniknya ke WhatsApp WINGS Customer Care, atau klik tombol di bawah untuk klaim.</span></div>"}
         buttonStyle={"primary"}
         buttonText={"Klaim Hadiah"}
         buttonUrl={"https://api.whatsapp.com/send?phone=622150957907&text=Hi%2C%20saya%20ingin%20klaim%20hadiah%20Sabun%20Krim%20Ekonomi%2C%20mohon%20bantuannya%20ya"}
@@ -139,7 +140,7 @@ export default function ExportedPage() {
         secondaryButtonLinkType={"url"}
         secondaryButtonTargetDialogId={""}
         secondaryButtonId={"feature-cara-klaim--secondary-button"}
-        image={"https://space.lunaaar.site/berkah-ekonomi/features-kode-unik.webp"}
+        image={"https://space.lunaaar.site/berkah-ekonomi/features-kode-unik_20260608_085835.webp"}
         imageUrl={""}
         imageLinkType={"url"}
         imageTargetDialogId={""}
@@ -151,7 +152,7 @@ export default function ExportedPage() {
       />
       <HeaderSection
         title={"Daftar Pemenang"}
-        subtitle={"Periode April 2026"}
+        subtitle={"Periode Maret-April 2026"}
         buttonStyle={"primary"}
         buttonText={"Label"}
         buttonUrl={""}
@@ -266,6 +267,7 @@ export default function ExportedPage() {
       />
       </StickyManager>
       </div>
+      <Notification />
     </main>
   );
 }
