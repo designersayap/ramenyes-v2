@@ -18,10 +18,10 @@ A Next.js 15 landing page application for the **Sabun Krim Ekonomi - Gebyar Berk
 
 ## 🏷️ Version & Changelog
 
-### **Current Version:** `1.1.0`
+### **Current Version:** `1.0.1`
 
-#### **Release v1.1.0 — June 17, 2026**
-- **chore:** Bumped version to `1.1.0` in `package.json` for UAT alignment.
+#### **Release v1.0.1 — June 17, 2026**
+- **chore:** Set version to `1.0.1` in `package.json` for UAT alignment.
 - **fix:** Removed the local `api` folder and successfully migrated all endpoints to external APIs (e.g., Google Apps Script) to enable a **pure static export**.
 - **docker:** Reverted standalone Next.js server configuration in the `Dockerfile` to use a minimal Nginx multi-stage build, serving the statically exported files under `/app/out` directly.
 - **update:** Performed configuration and layout adjustments (responsive updates for mobile and custom banner links).
