@@ -1,4 +1,4 @@
-name: deploy smu-lunar-sabunkrimekonomi-web
+name: deploy smu-lunar-ramenyes-v2-web
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
         id: set-env
         run: |
           # Common base names
-          BASE_SERVICE_NAME="smu-berkahekonomi"
+          BASE_SERVICE_NAME="smu-ramenyes-v2"
           
           ## Branch-specific configuration
           if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
@@ -145,9 +145,9 @@ jobs:
           ENV=${{ needs.setup-environment.outputs.environment }}
           REPO_NAME=${{ env.REPO_NAME }}
           if [[ "$ENV" == "dev" || "$ENV" == "uat" ]]; then
-            SECRET_NAME="/ecs/smu-berkahekonomi-fe/$ENV"
+            SECRET_NAME="/ecs/smu-ramenyes-v2-fe/$ENV"
           else
-            SECRET_NAME="/ecs/smu-berkahekonomi-fe/prod"
+            SECRET_NAME="/ecs/smu-ramenyes-v2-fe/prod"
           fi
           touch .env
           aws secretsmanager get-secret-value \
@@ -170,7 +170,7 @@ jobs:
           ECR_REGISTRY: ${{ needs.setup-environment.outputs.ecr-registry }}
           IMAGE_TAG: ${{ needs.setup-environment.outputs.image-tag }}
         run: |
-          FULL_IMAGE_TAG="${ECR_REGISTRY}/smu-berkahekonomi-fe:${IMAGE_TAG}"
+          FULL_IMAGE_TAG="${ECR_REGISTRY}/smu-ramenyes-v2-fe:${IMAGE_TAG}"
           
           echo "================================================"
           echo "🐳 Building Docker Image"
@@ -234,7 +234,7 @@ jobs:
       - name: Deploy to ECS
         env:
           DOCKER_REGISTRY: ${{ needs.setup-environment.outputs.ecr-registry }}
-          IMAGE_NAME: smu-berkahekonomi-fe
+          IMAGE_NAME: smu-ramenyes-v2-fe
           CI_AWS_ECS_CLUSTER: ${{ needs.setup-environment.outputs.ecs-cluster }}
           CI_AWS_ECS_SERVICE: ${{ needs.setup-environment.outputs.ecs-service }}
           CI_AWS_ECS_TASK_DEFINITION: ${{ needs.setup-environment.outputs.ecs-task-definition }}
