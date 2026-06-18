@@ -2,15 +2,14 @@
 
 import OsmBanner from "@/components/osm-banner.js";
 import NavigationCenter from "@/components/navigation-center.js";
-import SpacingMedium from "@/components/spacing-medium.js";
+import ScrollGroup from "@/components/scroll-group.js";
+import Media54 from "@/components/media-5-4.js";
 import Media169 from "@/components/media-16-9.js";
+import SpacingSmall from "@/components/spacing-small.js";
 import HeaderSection from "@/components/header-section.js";
-import MediaGridCol2 from "@/components/media-grid-col-2.js";
-import FeatureImageLeft from "@/components/feature-image-left.js";
-import TestimonyPortrait from "@/components/testimony-portrait.js";
-import GalleryStrip from "@/components/gallery-strip.js";
+import Media219 from "@/components/media-21-9.js";
+import HeaderTnc from "@/components/header-tnc.js";
 import FooterOmnichannel from "@/components/footer-omnichannel.js";
-import DialogAccordion from "@/components/dialog-accordion.js";
 import FullBody from "@/components/full-body.js";
 import StickyManager from "@/utils/sticky-manager";
 import Notification from "@/components/notification";
@@ -23,47 +22,76 @@ export default function ExportedPage() {
       <div style={{ position: 'relative', zIndex: 1, width: '100%' }}>
       <StickyManager stickyIndices={[0,1]} stackedIndices={[]} blurIndices={[]} overlayIndices={[]}>
       <OsmBanner
-        title={"Waspada Penipuan! Penyelenggara hanya menggunakan nomor WhatsApp: <a href=\"https://wa.me/622150957907\">021-50957907</a>, 081119765007, 081119765008. Di luar nomor tersebut bukan tanggung jawab Penyelenggara<br>"}
+        title={"Waspada penipuan! Pemenang tidak dipungut biaya apa pun dan hanya akan dihubungi melalui <b>WhatsApp Resmi 08111-975-1441</b> atau <b>WINGS Customer Care +62 21 50957907</b>."}
         buttonText={"Label"}
         buttonUrl={""}
         buttonVisible={false}
         buttonLinkType={"url"}
         buttonTargetDialogId={""}
-        buttonId={"banner-informasi--button"}
+        buttonId={""}
         variant={"brand"}
-        sectionId={"banner-informasi"}
+        sectionId={"osm-6550"}
       />
       <NavigationCenter
-        logo={"https://space.lunaaar.site/berkah-ekonomi/navigasi-logo.webp"}
+        logo={"https://space.lunaaar.site/assets-ramenyes/logo_ramen_yes.webp"}
         logoId={""}
-        menu1Label={"Beranda"}
-        menu1Url={"#banner-hadiah"}
+        menu1Label={"Hadiah"}
+        menu1Url={"#hadiah"}
         menu1LinkType={"url"}
         menu1TargetDialogId={""}
-        menu1Id={"navigasi-beranda"}
-        menu2Label={"Syarat dan Ketentuan"}
-        menu2Url={"#banner-syarat-dan-ketentuan"}
+        menu1Id={""}
+        menu2Label={"Panduan"}
+        menu2Url={"#panduan"}
         menu2LinkType={"url"}
         menu2TargetDialogId={""}
-        menu2Id={"navigasi-ketentuan"}
-        menu3Label={"Cara Klaim"}
-        menu3Url={"#feature-cara-klaim"}
+        menu2Id={""}
+        menu3Label={"Ketentuan"}
+        menu3Url={"#syarat-dan-ketentuan"}
         menu3LinkType={"url"}
         menu3TargetDialogId={""}
-        menu3Id={"navigasi-cara-klaim"}
-        menu4Label={"Pemenang"}
-        menu4Url={"#daftar-pemenang"}
+        menu3Id={""}
+        menu4Label={"Produk"}
+        menu4Url={"#title-produk"}
         menu4LinkType={"url"}
         menu4TargetDialogId={""}
-        menu4Id={"navigasi-pemenang"}
+        menu4Id={""}
         menuColor={"default"}
-        sectionId={"navigasi"}
+        sectionId={"navigation-8754"}
       />
-      <SpacingMedium
-        sectionId={"spacing-7401"}
+      <ScrollGroup
+        image={""}
+        mobileImage={""}
+        imageIsPortrait={false}
+        imageMobileRatio={""}
+        scrollEffect={"parallax"}
+        components={[{"id":"media-5-4","name":"Media - 5:4","uniqueId":"ea44fdf3-23a1-46fc-a86b-b82599ab01d4","sectionId":"hadiah","image":"https://space.lunaaar.site/assets-ramenyes/headline_5_4.webp","fullWidth":false,"imageShowStroke":"https://space.lunaaar.site/assets-lunar/placeholder.svg","imageIsPortrait":false, component: Media54}, {"id":"media-16-9","name":"Media - 16:9","uniqueId":"0177699e-f35e-4b5e-9f1c-e292b64c176b","sectionId":"tvc","image":"https://space.lunaaar.site/assets-ramenyes/TVC%20Ramen%20YES.webm", component: Media169}, {"id":"spacing-small","name":"Spacing - Small","uniqueId":"19f3cd00-98ef-4083-a494-ee4ea24ffce9","sectionId":"spacing-5028", component: SpacingSmall}]}
+        sectionId={"header"}
+        enableBlur
+        disableEffects
       />
-      <Media169
-        image={"https://assets.berkah-umroh.sabunkrimekonomi.id/Cutdown%2015%20detik%20-%20H.264.mp4"}
+      <HeaderSection
+        title={"Mudah Banget Ikutnya!"}
+        subtitle={"Lorem Ipsum is simply dummy text of the printing and typesetting industry"}
+        subtitleVisible={false}
+        buttonStyle={"primary"}
+        buttonText={"Label"}
+        buttonUrl={""}
+        buttonVisible={false}
+        buttonLinkType={"url"}
+        buttonTargetDialogId={""}
+        buttonId={"panduan--button"}
+        secondaryButtonText={"Label"}
+        secondaryButtonUrl={""}
+        secondaryButtonVisible={false}
+        secondaryButtonLinkType={"url"}
+        secondaryButtonTargetDialogId={""}
+        secondaryButtonId={"panduan--secondary-button"}
+        sectionId={"panduan"}
+        titleId={"panduan--title"}
+        subtitleId={"panduan--subtitle"}
+      />
+      <Media219
+        image={"https://space.lunaaar.site/assets-ramenyes/guidance.webp"}
         imageUrl={""}
         imageLinkType={"url"}
         imageTargetDialogId={""}
@@ -72,197 +100,98 @@ export default function ExportedPage() {
         imageMobileRatio={""}
         imageMobileSrc={""}
         imageAutoplay
-        sectionId={"media-7964"}
-        imageEnableAudio
-        imageShowStroke
+        sectionId={"foto-panduan"}
+        imageId={"foto-panduan--image"}
       />
       <HeaderSection
-        title={"Total <span style=\"font-weight: normal;\">Hadiah</span> Miliaran Menantimu!"}
-        subtitle={"<div><span style=\"background-color: transparent;\"><b>Batas Penukaran Hadiah Sampai 31 JULI 2026</b></span></div><div><span style=\"background-color: transparent;\">Beli Sabun Krim Ekonomi bertanda khusus, kirim kode uniknya ke WhatsApp WINGS Customer Care, atau klik tombol di bawah untuk klaim.</span></div>"}
+        title={"Mekanisme dan Ketentuan"}
+        subtitle={"Periode Promo: Juni 2026 – Desember 2026<div>Batas Penukaran Hadiah: 31 Januari 2027</div>"}
+        titleVisible
+        subtitleVisible={false}
         buttonStyle={"primary"}
-        buttonText={"Klaim Hadiah"}
-        buttonUrl={"https://api.whatsapp.com/send?phone=622150957907&text=Hi%2C%20saya%20ingin%20klaim%20hadiah%20Sabun%20Krim%20Ekonomi%2C%20mohon%20bantuannya%20ya"}
-        buttonLinkType={"url"}
-        buttonTargetDialogId={""}
-        buttonId={"title-total-hadiah--button"}
-        secondaryButtonText={"Label"}
-        secondaryButtonUrl={""}
-        secondaryButtonVisible={false}
-        secondaryButtonLinkType={"url"}
-        secondaryButtonTargetDialogId={""}
-        secondaryButtonId={"title-total-hadiah--secondary-button"}
-        sectionId={"title-total-hadiah"}
-        titleId={"title-total-hadiah--title"}
-        subtitleId={"title-total-hadiah--subtitle"}
-      />
-      <SpacingMedium
-        sectionId={"spacing"}
-      />
-      <MediaGridCol2
-        images={[{"image":"https://space.lunaaar.site/berkah-ekonomi/umroh-reward-219.webp","imageUrl":"","imageLinkType":"url","imageTargetDialogId":"","imageIsPortrait":false,"imageMobileRatio":"","imageMobileSrc":"https://space.lunaaar.site/assets-lunar/placeholder.svg","imageAutoplay":true,"visible":true,"cardId":"image-0"},{"image":"https://space.lunaaar.site/berkah-ekonomi/emas-reward-219.webp","imageUrl":"","imageLinkType":"url","imageTargetDialogId":"","imageIsPortrait":false,"imageMobileRatio":"","imageMobileSrc":"https://space.lunaaar.site/assets-lunar/placeholder.svg","imageAutoplay":true,"visible":true,"cardId":"image-1"},{"image":"https://space.lunaaar.site/assets-lunar/placeholder.svg","imageUrl":"","imageLinkType":"url","imageTargetDialogId":"","imageIsPortrait":false,"imageMobileRatio":"","imageMobileSrc":"https://space.lunaaar.site/assets-lunar/placeholder.svg","imageAutoplay":true,"visible":false,"cardId":"image-2"},{"image":"https://space.lunaaar.site/assets-lunar/placeholder.svg","imageUrl":"","imageLinkType":"url","imageTargetDialogId":"","imageIsPortrait":false,"imageMobileRatio":"","imageMobileSrc":"https://space.lunaaar.site/assets-lunar/placeholder.svg","imageAutoplay":true,"visible":false,"cardId":"image-3"}]}
-        fullWidth={false}
-        hasFloatingEffect={false}
-        aspectRatio={"21-9"}
-        autoScroll={false}
-        autoScrollEffect={"slide"}
-        marqueeDuration={60}
-        marqueeDirection={"rtl"}
-        imageShowStroke={false}
-        sectionId={"banner-hadiah"}
-      />
-      <Media169
-        image={"https://space.lunaaar.site/berkah-ekonomi/features-syarat-ketentuan.webp"}
-        imageUrl={"#"}
-        imageLinkType={"dialog"}
-        imageTargetDialogId={"dialog-tnc"}
-        fullWidth={false}
-        imageIsPortrait={false}
-        imageMobileRatio={"4-5"}
-        imageMobileSrc={"https://space.lunaaar.site/berkah-ekonomi/features-mobile-syarat-ketentuan.webp"}
-        imageAutoplay
-        sectionId={"banner-syarat-dan-ketentuan"}
-        imageId={"banner-syarat-dan-ketentuan--image"}
-        imageShowStroke
-      />
-      <FeatureImageLeft
-        title={"Temukan Kode Unik di dalam Kemasan Sabun Krim Ekonomi"}
-        subtitle={"Klaim Hadiahnya dengan Klik Tombol dibawah ini"}
-        buttonStyle={"primary"}
-        buttonText={"Klaim Hadiah"}
-        buttonUrl={"https://api.whatsapp.com/send?phone=622150957907&text=Hi%2C%20saya%20ingin%20klaim%20hadiah%20Sabun%20Krim%20Ekonomi%2C%20mohon%20bantuannya%20ya"}
-        buttonLinkType={"url"}
-        buttonTargetDialogId={""}
-        buttonId={"feature-cara-klaim--button"}
-        secondaryButtonText={"Label"}
-        secondaryButtonUrl={""}
-        secondaryButtonVisible={false}
-        secondaryButtonLinkType={"url"}
-        secondaryButtonTargetDialogId={""}
-        secondaryButtonId={"feature-cara-klaim--secondary-button"}
-        image={"https://space.lunaaar.site/berkah-ekonomi/img-banner.webp"}
-        imageUrl={""}
-        imageLinkType={"url"}
-        imageTargetDialogId={""}
-        imageAutoplay
-        sectionId={"feature-cara-klaim"}
-        imageId={"feature-cara-klaim--image"}
-        titleId={"feature-cara-klaim--title"}
-        subtitleId={"feature-cara-klaim--subtitle"}
-      />
-      <HeaderSection
-        title={"Daftar Pemenang"}
-        subtitle={"Periode April - Mei 2026"}
-        buttonStyle={"primary"}
-        buttonText={"Label"}
-        buttonUrl={""}
+        buttonText={"Pelajari Lebih Lanjut"}
+        buttonUrl={"#"}
         buttonVisible={false}
-        buttonLinkType={"url"}
-        buttonTargetDialogId={""}
-        buttonId={""}
+        buttonLinkType={"dialog"}
+        buttonTargetDialogId={"dialog-item-list"}
+        buttonId={"syarat-dan-ketentuan--button"}
         secondaryButtonText={"Label"}
         secondaryButtonUrl={""}
         secondaryButtonVisible={false}
         secondaryButtonLinkType={"url"}
         secondaryButtonTargetDialogId={""}
         secondaryButtonId={""}
-        sectionId={"daftar-pemenang"}
+        sectionId={"syarat-dan-ketentuan"}
+        titleId={"syarat-dan-ketentuan--title"}
+        subtitleId={"syarat-dan-ketentuan--subtitle"}
       />
-      <TestimonyPortrait
-        testimonies={[{"name":"Subaeda","role":"Lumajang","description":"\"Nggak nyangka dapet emas dari Krim Ekonomi. Terima kasih!\"","image":"https://space.lunaaar.site/berkah-ekonomi/subaeda_lumajang_emas_1_20260603_084436.webp","imageUrl":"","imageLinkType":"url","imageTargetDialogId":"","avatar":"https://space.lunaaar.site/berkah-ekonomi/icon-gold.png","avatarUrl":"","avatarLinkType":"url","avatarTargetDialogId":"","imageVisible":true,"avatarVisible":true,"cardId":"","visible":true},{"name":"Jaenab","role":"Bantaeng","description":"\"Terima kasih Krim Ekonomi untuk Emasnya. Saya senang sekali!\"","image":"https://space.lunaaar.site/berkah-ekonomi/pemenang-jaenab_bantaeng_emas2_1.webp","imageUrl":"","imageLinkType":"url","imageTargetDialogId":"","avatar":"https://space.lunaaar.site/berkah-ekonomi/icon-gold.png","avatarUrl":"","avatarLinkType":"url","avatarTargetDialogId":"","imageVisible":true,"avatarVisible":true,"cardId":"","visible":false},{"name":"Nur Vitasari","role":"Banjarnegara","description":"\"Senang banget! Emasnya buat tambahan modal kios saya.\"","image":"https://space.lunaaar.site/berkah-ekonomi/pemenang-nur_vitasari_banjarnegara_emas_1.webp","imageUrl":"","imageLinkType":"url","imageTargetDialogId":"","avatar":"https://space.lunaaar.site/berkah-ekonomi/icon-gold.png","avatarUrl":"","avatarLinkType":"url","avatarTargetDialogId":"","imageVisible":true,"avatarVisible":true,"cardId":"","visible":false},{"name":"Kuntariati","role":"Kediir","description":"\"Bahagia dapat emas, Makasih banyak ya. Smoga berkah.\"","image":"https://space.lunaaar.site/berkah-ekonomi/pemenang-kuntariati_kediri_emas_1.webp","imageUrl":"","imageLinkType":"url","imageTargetDialogId":"","avatar":"https://space.lunaaar.site/berkah-ekonomi/icon-gold.png","avatarUrl":"","avatarLinkType":"url","avatarTargetDialogId":"","imageVisible":true,"avatarVisible":true,"cardId":"","visible":false},{"name":"Parino","role":"Purworejo","description":"\"Sukses terus Krim Ekonomi. Sabunnya wangi, hadiahnya asli!\"","avatar":"https://space.lunaaar.site/berkah-ekonomi/icon-gold.png","avatarVisible":true,"image":"https://space.lunaaar.site/berkah-ekonomi/parino_purworejo_emas_1.webp","imageVisible":true,"visible":false,"cardId":"testimony-4"},{"name":"Siti","role":"Palangkaraya","description":"\"Emasnya mau buat tabungan, terima kasih Krim Ekonomi!\"","avatar":"https://space.lunaaar.site/berkah-ekonomi/icon-gold.png","avatarVisible":true,"image":"https://space.lunaaar.site/berkah-ekonomi/SITI_PALANGKARAYA_EMAS.png","imageVisible":true,"visible":true,"cardId":"testimony-5"},{"name":"Mujiyati","role":"Banjarnegara","description":"<div>\"Rasanya senang sekali, krim Ekonomi lancar, sukses mantap!\"</div>","avatar":"https://space.lunaaar.site/berkah-ekonomi/icon-gold.png","avatarVisible":true,"image":"https://space.lunaaar.site/berkah-ekonomi/MUJIYATI_BANJARNEGARA_EMAS%201.png","imageVisible":true,"visible":true,"cardId":"testimony-6"},{"name":"Lasinah","role":"Lamongan","description":"\"Seneng banget bisa menang emas dari Krim Ekonomi.\"","avatar":"https://space.lunaaar.site/berkah-ekonomi/icon-gold.png","avatarVisible":true,"image":"https://space.lunaaar.site/berkah-ekonomi/lasinah_lamongan_lm_2_20260526_172000.webp","imageVisible":true,"visible":true,"cardId":"testimony-7"},{"name":"Aliyah","role":"Manyar","description":"\"Alhamdulillah senengnya dapet emas dari Krim Ekonomi!\"","avatar":"https://space.lunaaar.site/berkah-ekonomi/icon-gold.png","avatarVisible":true,"image":"https://space.lunaaar.site/berkah-ekonomi/aliyah_manyar_emas_1.webp","imageVisible":true,"visible":true,"cardId":"testimony-8"},{"name":"Bungatang","role":"Bone","description":"\"Terima kasih Krim Ekonomi, emasnya sangat berguna!\"","avatar":"https://space.lunaaar.site/berkah-ekonomi/icon-gold.png","avatarVisible":true,"image":"https://space.lunaaar.site/berkah-ekonomi/bungatang_bone_emas_1.webp","imageVisible":true,"visible":true,"cardId":"testimony-9"},{"name":"Dian","role":"Trenggalek","description":"\"Nggak nyangka dapet emas, Krim Ekonomi memang terbaik.\"","avatar":"https://space.lunaaar.site/berkah-ekonomi/icon-gold.png","avatarVisible":true,"image":"https://space.lunaaar.site/berkah-ekonomi/dian_trenggalek_emas_1.webp","imageVisible":true,"visible":true,"cardId":"testimony-10"},{"name":"Hartati","role":"Batulicin","description":"\"Sudah lama pakai Krim Ekonomi, nggak nyangka bisa menang emas!\"","avatar":"https://space.lunaaar.site/berkah-ekonomi/icon-gold.png","avatarVisible":true,"image":"https://space.lunaaar.site/berkah-ekonomi/hartati_batulicin_emas_1.webp","imageVisible":true,"visible":true,"cardId":"testimony-11"}]}
-        fullWidth
-        autoScroll
-        autoScrollEffect={"marquee"}
-        marqueeDuration={100}
-        marqueeDirection={"rtl"}
-        imageShowStroke={"https://space.lunaaar.site/assets-lunar/placeholder.svg"}
-        sectionId={"carousel-pemenang"}
-      />
-      <SpacingMedium
-        sectionId={"spacing"}
-      />
-      <Media169
-        image={"https://space.lunaaar.site/berkah-ekonomi/features-product.webp"}
-        imageUrl={""}
-        imageLinkType={"url"}
-        imageTargetDialogId={""}
-        fullWidth={false}
-        imageIsPortrait={false}
-        imageMobileRatio={"4-5"}
-        imageMobileSrc={"https://space.lunaaar.site/berkah-ekonomi/features-mobile-product.webp"}
-        imageAutoplay
-        sectionId={"banner-produk"}
+      <HeaderTnc
+        hasCardStyle={false}
+        items={[{"title":"Syarat dan ketentuan","description":"<div><b>Periode Promo: Juni 2026 – Desember 2026&nbsp; |&nbsp;&nbsp;<span style=\"background-color: initial;\">Batas Penukaran Hadiah: 31 Januari 2027</span></b></div><div><b><span style=\"background-color: initial;\"><br></span></b></div><ol><li>Temukan stiker hologram pada box kemasan yang bertanda khusus.</li><li>Periksa bagian dalam inner box isi 12 pcs dan gosok stiker hologram untuk mengetahui hadiah yang Anda dapatkan.</li><li>Lepaskan stiker hologram secara perlahan dari inner box dan pastikan stiker tidak rusak atau robek. Simpan stiker hologram sebagai bukti untuk proses penukaran hadiah.</li><li>Penyelenggara tidak bertanggung jawab atas kerusakan stiker hologram sebelum proses penukaran hadiah dilakukan.</li><li>Program ini tidak berlaku bagi karyawan WINGS beserta anggota keluarganya.</li><li>Ramen YES tidak pernah memungut biaya apa pun dari pemenang program yang diselenggarakan oleh Ramen YES.</li><li>Pemenang tidak dipungut biaya apapun. Waspadai penipuan yang mengatasnamakan Ramen YES. Informasi resmi hanya disampaikan melalui WhatsApp Hotline 0811-1975-1441. Segala komunikasi di luar nomor tersebut bukan merupakan tanggung jawab Ramen YES.<br></li></ol>","titleVisible":true,"descriptionVisible":true,"titleId":"","descriptionId":"","cardId":"tnc-card-0","visible":true},{"title":"Cara Penukaran Hadiah","description":"<div><ol><li><span style=\"color: var(--content-neutral--body);\">Langkah Penukaran Hadiah untuk Para Pemenang</span><ol type=\"a\"><li>Hadiah produk dan uang tunai<br>Pemenang dapat menukarkan stiker hologram di toko terdekat yang menjual produk Ramen YES dan berpartisipasi dalam program ini.</li><li>Hadiah selain produk dan uang tunai (mobil, TV, handphone, sepeda listrik, dan emas)<ul><li>Pemenang perlu mengirimkan foto stiker hologram yang memuat kode unik ke WhatsApp Hotline 0811-1975-1441.</li><li>Penyelenggara akan melakukan verifikasi terhadap keabsahan kode unik tersebut. Hadiah hanya akan diberikan apabila kode dinyatakan sah dan valid oleh penyelenggara.</li></ul></li></ol></li><li>Pemenang tidak dapat menukar hadiah dengan bentuk lain<br>Seluruh hadiah diberikan sesuai ketersediaan stok. Apabila hadiah tertentu tidak tersedia, penyelenggara berhak menggantinya dengan hadiah lain yang memiliki nilai setara tanpa pemberitahuan sebelumnya. Penyelenggara tidak berkewajiban menyediakan hadiah yang telah habis atau tidak tersedia pada saat proses penyerahan hadiah dilakukan.</li><li>Pemenang wajib memeriksa kondisi hadiah maksimal 1 x 24 jam setelah hadiah diterima<br>Setelah melewati batas waktu tersebut, penyelenggara tidak bertanggung jawab atas segala bentuk keluhan atau komplain terkait kondisi hadiah.</li><li>Dengan menukarkan hadiah, pemenang dianggap telah:<br>- Membaca, memahami, dan menyetujui seluruh syarat dan ketentuan program.<br>- Bersedia memberikan data pribadi yang diperlukan untuk keperluan administrasi program.<br>- Memberikan izin kepada penyelenggara untuk menggunakan nama, foto, dan/atau dokumentasi pemenang untuk kebutuhan publikasi dan promosi tanpa kompensasi tambahan.</li><li>Seluruh pajak hadiah akan ditanggung oleh penyelenggara.<br>Untuk informasi lebih lanjut, hubungi Hotline 0811-1975-1441 atau kunjungi www.ramenyes.co.id</li></ol></div>","titleVisible":true,"descriptionVisible":true,"visible":true,"cardId":"tnc-item-1"}]}
+        sectionId={"detail"}
       />
       <HeaderSection
-        title={"&nbsp;Raih Kesempatan Menangmu!&nbsp;"}
-        subtitle={"<span style=\"background-color: transparent;\">Beli Sabun Krim Ekonomi sekarang dan jadilah pemenang berikutnya!</span>"}
+        title={"Varian Produk"}
+        subtitle={"Nikmati pilihan rasa&nbsp;<span style=\"background-color: transparent;\">dari</span><div><b style=\"background-color: transparent;\"><span style=\"color: var(--content-brand--brand);\">Hakata Chicken Ramen</span></b><span style=\"background-color: transparent;\"> dan </span><b style=\"background-color: transparent;\"><span style=\"color: var(--content-brand--brand);\">Tokyo Chicken Yakitori</span></b><span style=\"background-color: transparent;\">.</span></div>"}
+        subtitleVisible
         buttonStyle={"primary"}
-        buttonText={"Label"}
-        buttonUrl={""}
+        buttonText={"Beli Sekarang"}
+        buttonUrl={"#https://s.shopee.co.id/gNOKda0aV"}
         buttonVisible={false}
         buttonLinkType={"url"}
         buttonTargetDialogId={""}
-        buttonId={""}
+        buttonId={"title-produk--button"}
         secondaryButtonText={"Label"}
         secondaryButtonUrl={""}
         secondaryButtonVisible={false}
         secondaryButtonLinkType={"url"}
         secondaryButtonTargetDialogId={""}
-        secondaryButtonId={""}
-        sectionId={"title-instagram-feed"}
-        titleId={"title-instagram-feed--title"}
-        subtitleId={"title-instagram-feed--subtitle"}
+        secondaryButtonId={"title-produk--secondary-button"}
+        sectionId={"title-produk"}
+        titleId={"title-produk--title"}
+        subtitleId={"title-produk--subtitle"}
       />
-      <GalleryStrip
-        items={[{"title":"Bu Iin nyuci baju dan piring kotor,<div>Kita nemuin pemenang PAKET UMROH dan EMAS nih di Bogor!</div>","hashtag":"<a href=\"https://www.instagram.com/p/DX9Frb3KZG9/\">#SABUNKRIMEKONOMI #DARIMENCUCIBISAKETANAHSUCI</a>","image":"https://space.lunaaar.site/berkah-ekonomi/video/mei-testimony-pemenang-bogor.webm","imageId":"","cardId":"","visible":true,"url":"","linkType":"url","targetDialogId":"","imageAutoplay":"https://space.lunaaar.site/assets-lunar/placeholder.svg","enableAudio":true},{"title":"Horee, Ibu Marni dari Bantaeng mendapatkan hadiah EMAS 0,5gr!","hashtag":"<a href=\"https://www.instagram.com/p/DYWoFDqK6NZ/\">#SABUNKRIMEKONOMI #DARIMENCUCIBISAKETANAHSUCI</a>","image":"https://space.lunaaar.site/berkah-ekonomi/video/mei-testimony-bantaeng.webm","imageId":"","cardId":"","visible":true,"url":"","linkType":"url","targetDialogId":"","imageAutoplay":"https://space.lunaaar.site/assets-lunar/placeholder.svg"},{"title":"<a href=\"https://www.instagram.com/p/DXtn0-JChUu/\">Serunya Roadshow Sabun Krim Ekonomi di Bogor! 🎉</a>","hashtag":"<a href=\"https://www.instagram.com/p/DXtn0-JChUu/\">#SABUNKRIMEKONOMI #DARIMENCUCIBISAKETANAHSUCI</a>","image":"https://space.lunaaar.site/berkah-ekonomi/video/gebrak-pasar-bogor-r4.webm","imageId":"","cardId":"","visible":true,"url":"","linkType":"url","targetDialogId":"","imageAutoplay":"https://space.lunaaar.site/assets-lunar/placeholder.svg"},{"title":"<a href=\"https://www.instagram.com/p/DYCP3KUqptW/\">Selamat untuk pemenang Paket UMROH di Purwokerto 🤩✨</a>","hashtag":"<a href=\"https://www.instagram.com/p/DYCP3KUqptW/\">#SABUNKRIMEKONOMI #DARIMENCUCIBISAKETANAHSUCI</a>","image":"https://space.lunaaar.site/berkah-ekonomi/video/mei-testimony-umroh-purwokerto.webm","imageId":"","cardId":"","visible":true,"url":"","linkType":"url","targetDialogId":"","imageAutoplay":"https://space.lunaaar.site/assets-lunar/placeholder.svg"},{"title":"Bu Khalisat beli bebek, 🦆<div>Selamat untuk pemenang Emas di Cikampek! 🎉✨</div>","hashtag":"#SABUNKRIMEKONOMI #DARIMENCUCIBISAKETANAHSUCI","image":"https://assets.berkah-umroh.sabunkrimekonomi.id/PENYERAHAN HADIAH CILEGON 2 R2.webm","imageId":"","cardId":"","visible":false,"url":"https://www.instagram.com/p/DVdjoLdiciD/","linkType":"url","targetDialogId":"","imageAutoplay":"https://space.lunaaar.site/assets-lunar/placeholder.svg"},{"title":"-","hashtag":"#SABUNKRIMEKONOMI #DARIMENCUCIBISAKETANAHSUCI","image":"https://assets.berkah-umroh.sabunkrimekonomi.id/TESTIMONY PEMENANG SUKABUMI R3.webm","imageId":"","cardId":"carousel-instagram-feed-insta-5","visible":false,"url":"","linkType":"url","targetDialogId":"","imageAutoplay":"https://space.lunaaar.site/assets-lunar/placeholder.svg"}]}
-        autoScroll={false}
-        autoScrollEffect={"slide"}
-        marqueeDuration={20}
-        marqueeDirection={"rtl"}
-        imageOnly={false}
-        isCompact={false}
-        aspectRatio={"9-16"}
-        imageShowStroke={false}
-        sectionId={"carousel-instagram-feed"}
-        fullWidth
+      <Media219
+        image={"https://space.lunaaar.site/assets-ramenyes/list_product.webp"}
+        imageUrl={""}
+        imageLinkType={"url"}
+        imageTargetDialogId={""}
+        fullWidth={false}
+        imageIsPortrait={false}
+        imageMobileRatio={""}
+        imageMobileSrc={""}
+        imageAutoplay
+        sectionId={"list-produk"}
+        imageId={"list-produk--image"}
+      />
+      <Media219
+        image={"https://space.lunaaar.site/assets-ramenyes/product.webp"}
+        imageUrl={""}
+        imageLinkType={"url"}
+        imageTargetDialogId={""}
+        fullWidth={false}
+        imageIsPortrait={false}
+        imageMobileRatio={""}
+        imageMobileSrc={""}
+        imageAutoplay
+        sectionId={"foto-produk"}
+        imageId={"foto-produk--image"}
       />
       <FooterOmnichannel
-        image={"https://space.lunaaar.site/berkah-ekonomi/logo-footer.webp"}
+        image={"https://space.lunaaar.site/assets-ramenyes/logo_footer.webp"}
         menuColor={"default"}
-        copyrightText={"Copyright © Sabun Krim Ekonomi 2026"}
-        availableAtTitle={"Tersedia di"}
-        resourcesTitle={"Follow Us"}
-        socialLinks={[{"platform":"facebook","url":"https://www.instagram.com/solusirumahnyaman.id/","visible":true,"id":"","label":"solusirumahnyaman.id","image":"https://space.lunaaar.site/berkah-ekonomi/footer-icon-instagram.webp"},{"platform":"twitter","url":"https://www.instagram.com/sabunkrimekonomi/","visible":true,"id":"","label":"sabunkrimekonomi","image":"https://space.lunaaar.site/berkah-ekonomi/footer-icon-instagram.webp"},{"platform":"instagram","url":"https://www.instagram.com/solusirumahnyaman.id/","visible":false,"id":""},{"platform":"tiktok","url":"","visible":false,"id":""},{"platform":"youtube","url":"","visible":false,"id":""}]}
-        findUsOnLinks={[{"visible":true,"label":"WINGS Indonesia","image":"https://space.lunaaar.site/assets-template/icon-tokopedia.webp","url":"https://www.tokopedia.com/wingsofficial/etalase/ekonomi-cream-detergent?utm_source=website&utm_medium=brand&utm_campaign=othr_etalaseekonomicreamdet_111225_111226_s7495481450890169058"},{"visible":true,"label":"WINGS Official Shop","image":"https://space.lunaaar.site/assets-template/icon-shopee.webp","url":"https://shopee.co.id/universal-link/collections/11772668?deep_and_web=1&utm_campaign=s64474495_ss_id_webs_webadsnov25&utm_source=website&utm_medium=seller&utm_content=collsekonomicream&smtt=9"},{"visible":true,"label":"WINGS Flagship Store","image":"https://space.lunaaar.site/assets-template/icon-lazada.webp","url":"https://www.lazada.co.id/shop/wings-flagship-store"}]}
-        resourceLinks={[{"label":"Privacy Policy","url":"https://wingscorp.com/kebijakan-privasi/","visible":true,"id":"","linkType":"url","targetDialogId":""},{"label":"Terms & Condition","url":"","visible":true,"id":"","linkType":"url","targetDialogId":""},{"label":"Contact Us","url":"","visible":false,"id":"","linkType":"url","targetDialogId":""}]}
-        sectionId={"footer"}
-        availableAtLinks={[{"label":"WINGS Indonesia","url":"https://www.tokopedia.com/wingsofficial/etalase/ekonomi-cream-detergent?utm_source=website&utm_medium=brand&utm_campaign=othr_etalaseekonomicreamdet_111225_111226_s7495481450890169058","visible":true,"id":"","image":"https://res.cloudinary.com/dp3tcw3wj/image/upload/v1768404237/tokopedia_npjosv.png","imageId":"","linkType":"url","targetDialogId":""},{"label":"WINGS Official Shop","url":"https://shopee.co.id/universal-link/collections/11772668?deep_and_web=1&utm_campaign=s64474495_ss_id_webs_webadsnov25&utm_source=website&utm_medium=seller&utm_content=collsekonomicream&smtt=9","visible":true,"id":"","image":"https://res.cloudinary.com/dp3tcw3wj/image/upload/v1768404353/shopee_hjlszw.png","imageId":"","linkType":"url","targetDialogId":""},{"label":"Wings Indonesia","url":"","visible":true,"id":"","image":"https://res.cloudinary.com/dp3tcw3wj/image/upload/v1768443083/lazada_hrpn5g.png","imageId":"","linkType":"url","targetDialogId":""}]}
-      />
-      <DialogAccordion
-        title={"Syarat dan Ketentuan Program Promosi<div>Sabun Krim Serbaguna Ekonomi</div><div>\"GEBYAR BERKAH UMROH, PESTA EMAS\"</div>"}
-        description={"Program Promosi Sabun Krim Ekonomi \"<span class=\"body-bold\">Gebyar Berkah Umroh, Pesta Emas</span>\" ini diselenggarakan oleh <span class=\"body-bold\">PT. Sayap Mas Utama</span> bersama-sama <span class=\"body-bold\">PT. Wings Surya</span> berkedudukan di DKI Jakarta dan Surabaya, selaku produsen sabun krim deterjen dengan merek dagang “EKONOMI” (“<span class=\"body-bold\">Penyelenggara</span>”), dan PT. Bintang Pratama yang ditunjuk sebagai agency / operator penyelenggara undian (“<span class=\"body-bold\">Agency Penyelenggara</span>”).<div><br></div><div>Program ditujukan bagi konsumen yang membeli produk Sabun Krim Serbaguna Ekonomi (“<span class=\"body-bold\">Peserta</span>”).</div><div><br></div><div>Peserta yang berpartisipasi dalam Program ini wajib membaca, memahami dan mematuhi syarat dan ketentuan yang diuraikan di bawah ini termasuk perubahannya (jika ada) yang dibuat oleh pihak Penyelenggara dari waktu ke waktu (“<span class=\"body-bold\">Syarat dan Ketentuan</span>”).</div>"}
-        image={""}
-        imageId={""}
-        imageVisible={false}
-        imageUrl={""}
-        imageLinkType={"url"}
-        imageTargetDialogId={""}
-        imageAutoplay
-        items={[{"title":"Periode Program","content":"<b>1 Januari 2026 – 30 Juni 2026</b>"},{"title":"Hadiah","content":"<ol type=\"a\"><li>Selama periode Program, Peserta yang beruntung akan mendapatkan hadiah berupa 30 Paket Umroh dan 3000 Emas @ 0,5g (“Hadiah”).</li><li>Batas Penukaran Hadiah: <b>31 Juli 2026 jam 23.59 WIB</b></li></ol>"},{"title":"Cara Mendapatkan Hadiah","content":"<ol type=\"a\"><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md); background-color: rgba(0, 0, 0, 0);\">Beli Sabun Krim Serbaguna Ekonomi kemasan 145g, 175g, dan 380g bertanda khusus \"Gebyar Berkah Umroh, Pesta Emas\" di toko terdekat.</span></li><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md); background-color: rgba(0, 0, 0, 0);\">Temukan tulisan \"Hadiah Emas 0,5g XXXXXXX (kode unik)\" atau \"Hadiah Umroh XXXXXXX (kode unik)\" dalam kemasan Produk.</span></li><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">Kirim kode unik dan registrasi melalui WhatsApp ke nomor <a href=\"https://wa.me/622150957907\">021 50 957 907</a>. Ikuti petunjuk dan masukkan data diri. Penyelenggara tidak menerima pengiriman kode unik dan registrasi melalui saluran lain selain nomor WhatsApp tersebut.</span><br></li><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">Hadiah hanya akan diberikan kepada pemenang jika kode dinyatakan sah dan valid oleh Penyelenggara. Penyelenggara akan melakukan verifikasi Peserta dan keabsahan kode unik serta kemasan, dengan ketentuan sebagai berikut:</span><ol><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">Peserta wajib menunjukkan kemasan yang berisi kode unik pada saat penyerahan hadiah. Apabila peserta tidak dapat menunjukkan kemasan yang berisi kode unik, maka hadiah tersebut akan <span class=\"body-bold\">dibatalkan</span>.</span></li><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">Kemasan yang ditunjukkan harus asli, tidak rusak, dan tidak dimodifikasi, dengan contoh pada gambar di bawah ini:<br><img src=\"https://space.lunaaar.site/berkah-ekonomi/kemasan-asli.webp\"></span></li><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">Kemasan yang tidak dapat diterima oleh Penyelenggara adalah kemasan dengan contoh pada gambar di bawah ini:<br><img src=\"https://space.lunaaar.site/berkah-ekonomi/kemasan-tidak-diterima-upd21mei.webp\"><br><br></span></li></ol></li></ol>"},{"title":"Ketentuan Umum","content":"<ol type=\"a\"><li>Program ini tidak berlaku bagi karyawan Wings Group dan anggota keluarganya.</li><li>Penukaran Hadiah hanya dapat dilakukan oleh Warga Negara Indonesia, berusia minimal 17 tahun, memiliki kartu identitas yang sah dan masih berlaku, serta berdomisili di wilayah Negara Republik Indonesia.</li><li>Peserta yang melakukan penukaran hadiah, dianggap:<ol><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">membaca, memahami, dan menyetujui Syarat dan Ketentuan Umum ini yang mengatur pelaksanaan Program.</span></li><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">Memahami dan menyetujui bahwa setiap informasi yang diberikan termasuk data pribadi Peserta yang dikumpulkan dalam rangka pelaksanaan Program ini (“Data Peserta”) adalah benar, tepat, akurat, dan dapat dipertanggungjawabkan. Data Peserta akan dikumpulkan, digunakan, diproses, dan/atau diungkapkan oleh Penyelenggara untuk keperluan verifikasi, publikasi, promosi, pelaporan, evaluasi, dan/atau pelaksanaan Program, yang dilakukan oleh Penyelenggara;</span></li><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">Memahami bahwa Penyelenggara berhak mengganti Hadiah dengan jenis atau spesifikasi yang berbeda namun memiliki nilai yang setara jika terjadi keadaan di luar kendali Penyelenggara.</span></li><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">Memahami bahwa Penyelenggara tidak akan bertanggung jawab apabila terjadi penipuan dan/atau tindak pidana lainnya yang mengatasnamakan Program ini. Untuk itu, Peserta diminta untuk berhati-hati dan waspada terhadap modus penipuan dan/atau tindak pidana lainnya yang mungkin mengatasnamakan Program ini serta selalu memastikan berhubungan dengan narahubung Penyelenggara yang ditentukan dalam Syarat dan Ketentuan ini.</span></li></ol></li></ol>"},{"title":"Ketentuan Pemenang","content":"<ol type=\"a\"><li>Pemenang harus memiliki nomor ponsel atau handphone yang bisa dihubungi untuk keperluan verifikasi Peserta dan keabsahan kode unik pada kemasan serta hal-hal lainnya yang berhubungan dengan Program ini dan tidak mengubah nomor ponsel atau handphone selama periode Program berlangsung.</li><li>Pemenang wajib melengkapi seluruh persyaratan yang dibutuhkan oleh Penyelenggara dalam jangka waktu <span class=\"body-bold\">maksimal 30 hari kerja</span> sejak Peserta diumumkan sebagai pemenang. Pemenang yang tidak melengkapi seluruh persyaratan dalam jangka waktu tersebut secara otomatis dianggap melepaskan haknya untuk menerima Hadiah sebagai pemenang dan membebaskan Penyelenggara dari segala tuntutan, klaim, dan/atau gugatan dalam bentuk apapun sehubungan dengan penyerahan Hadiah di masa mendatang.</li><li>Hadiah akan dikirimkan kepada pemenang <span class=\"body-bold\">maksimal 30 hari kerja</span> setelah seluruh syarat-syarat yang diwajibkan oleh Penyelenggara telah dilengkapi oleh Peserta dan telah selesai diverifikasi oleh Penyelenggara.</li><li>Penyelenggara berhak untuk mendiskualifikasi Peserta yang diduga atau terbukti melakukan tindakan-tindakan yang melanggar Syarat dan Ketentuan atau bertindak dengan cara apapun yang dianggap mengganggu kegiatan promosi Penyelenggara.</li><li>Khusus pemenang hadiah umroh, berlaku ketentuan tambahan sebagai berikut:<ol><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">Pemenang hadiah umroh akan diberangkatkan dari Bandara Soekarno Hatta, Tangerang (“Bandara”). Seluruh biaya yang dikeluarkan pemenang untuk menuju ke Bandara dan kembali dari Bandara bukan merupakan tanggung jawab Penyelenggara.</span></li><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">Waktu keberangkatan umroh ditentukan oleh Penyelenggara, yang mana keberangkatan akan dilakukan di antara <span class=\"body-bold\">bulan Agustus-Desember 2026</span>.</span></li><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">Jika pemenang Hadiah umroh tidak dapat berangkat pada jadwal yang telah ditentukan oleh Penyelenggara, Hadiah umroh dapat dialihkan kepada pihak lain yang ditunjuk oleh pemenang dengan terlebih dahulu mendapatkan persetujuan tertulis dari Penyelenggara.</span></li><li><span style=\"font-family: var(--font-family-body); font-size: var(--typography-font-size-paragraph-md);\">Pemenang dan/atau pihak lain yang menerima pengalihan dari pemenang, wajib mengikuti seluruh agenda perjalanan yang telah ditetapkan, mengikuti seluruh persyaratan yang ditentukan, dan bersedia didokumentasikan untuk keperluan promosi Penyelenggara.</span></li></ol></li><li>Seluruh Hadiah tidak dapat diuangkan.</li></ol>"},{"title":"Lain-Lain","content":"<ol type=\"a\"><li>Waspadai penipuan yang mengatasnamakan Penyelenggara. Penyelenggara hanya menggunakan nomor <span class=\"body-bold\">WhatsApp resmi 02150957907</span>; <span class=\"body-bold\">081119765007</span> dan <span class=\"body-bold\">081119765008</span> Segala komunikasi yang tidak melalui nomor tersebut bukan merupakan tanggung jawab Penyelenggara.</li><li>Dalam menyelenggarakan Program ini:<ol><li>Penyelenggara telah memperoleh izin dari instansi yang berwenang sesuai dengan peraturan perundang-undangan yang berlaku.</li><li>Penyelenggara tidak memungut biaya apa pun. Apabila terdapat pihak yang mengatasnamakan Penyelenggara yang mengenakan biaya, imbalan, dan/atau sejenisnya kepada Peserta, maka dapat dipastikan bahwa hal itu tidak benar adanya dan merupakan penipuan.</li></ol></li><li>Syarat dan ketentuan ini diatur berdasarkan peraturan perundang-undangan yang berlaku di wilayah Republik Indonesia. Apabila di kemudian hari timbul suatu perselihan antara Peserta dan Penyelenggara sehubungan dengan Program ini maka cara penyelesaian perselisihan dilakukan melalui musyawarah untuk mufakat.</li><li>Keputusan Penyelenggara bersifat final dan tidak dapat diganggu gugat.</li><li>Informasi dan keterangan lebih lanjut, silakan hubungi atau cek:<ul><li>Layanan konsumen <a href=\"https://wa.me/622150957907\">021 50 957 907 </a>(Chat WhatsApp & telepon berbayar)</li><li>Website <a href=\"https://berkah-umroh.sabunkrimekonomi.id/\">www.berkah-umroh.sabunkrimekonomi.id</a></li><li>Instagram <a href=\"https://www.instagram.com/solusirumahnyaman.id/\">@solusirumahnyaman.id</a>&nbsp;dan&nbsp;<a href=\"https://www.instagram.com/sabunkrimekonomi/\">@sabunkrimekonomi</a></li></ul></li></ol>"},{"title":"Accordion Title","content":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."},{"title":"Accordion Title","content":"Lorem ipsum dolor sit amet, consectetur adipiscing elit."}]}
-        sectionId={"dialog-tnc"}
-        item6Visible={false}
-        item7Visible={false}
-        item0Id={"dialog-tnc-periode-program"}
-        item1Id={"dialog-tnc-hadiah"}
-        item2Id={"dialog-tnc-cara-mendapatkan-hadiah"}
-        item3Id={"dialog-tnc-ketentuan-umum"}
-        item4Id={"dialog-tnc-ketentuan-pemenang"}
-        item5Id={"dialog-tnc-lain-lain"}
+        copyrightText={"<span style=\"color: var(--content-neutral--body);\">Copyright © Ramen YES 2026</span>"}
+        availableAtTitle={"Temui Kami di Sini"}
+        resourcesTitle={"<br>"}
+        socialLinks={[{"label":"@RamenYesOfficial","url":"https://www.youtube.com/@RamenYesOfficial","visible":true,"id":"","image":"https://space.lunaaar.site/assets-ramenyes/youtube.webp","imageId":"","linkType":"url","targetDialogId":""},{"label":"@RamenYess","url":"https://www.facebook.com/people/Ramen-Yess/","visible":true,"id":"","image":"https://space.lunaaar.site/assets-ramenyes/facebook.webp","imageId":"","linkType":"url","targetDialogId":""},{"label":"sedaapramenyes@gmail.com","url":"","visible":false,"id":"","image":"https://space.lunaaar.site/assets-ramenyes/email.webp","imageId":"","linkType":"url","targetDialogId":""}]}
+        findUsOnLinks={[{"label":"@ramenyes","url":"https://www.instagram.com/ramenyes/","visible":true,"id":"","image":"https://space.lunaaar.site/assets-ramenyes/instagram.webp","imageId":"","linkType":"url","targetDialogId":""},{"label":"@ramenyesofficial","url":"https://www.tiktok.com/@ramenyesofficial","visible":true,"id":"","image":"https://space.lunaaar.site/assets-ramenyes/tiktok.webp","imageId":"","linkType":"url","targetDialogId":""},{"label":"@RamenYesID&nbsp;","url":"https://x.com/ramenyesid","visible":true,"id":"","image":"https://space.lunaaar.site/assets-ramenyes/x.webp","imageId":"","linkType":"url","targetDialogId":""}]}
+        resourceLinks={[{"label":"<br>","url":"","visible":false,"id":"","linkType":"url","targetDialogId":""},{"label":"<br>","url":"","visible":false,"id":"","linkType":"url","targetDialogId":""}]}
+        sectionId={"footer-9097"}
       />
       <FullBody
-        image={"https://space.lunaaar.site/berkah-ekonomi/bg-image.webp"}
-        mobileImage={"https://space.lunaaar.site/berkah-ekonomi/bg_mobile.webp"}
-        sectionId={"background-body"}
-        imageId={"background-body--bg"}
+        image={"https://space.lunaaar.site/assets-ramenyes/bg_desktop.webp"}
+        mobileImage={"https://space.lunaaar.site/assets-ramenyes/bg_full_mobile.webp"}
+        sectionId={"background-4812"}
       />
       </StickyManager>
       </div>

@@ -11,4 +11,4 @@ Disallow: /*?*
 # SEO: Block internal data fetching
 Disallow: /api/
 
-Sitemap: https://berkah-umroh.sabunkrimekonomi.id/sitemap.xml
+Sitemap: /sitemap.xml

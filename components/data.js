@@ -42,6 +42,21 @@ export const componentDefaults = {
         secondaryButtonTargetDialogId: "",
         secondaryButtonId: ""
     },
+    "header-tnc": {
+        hasCardStyle: false,
+        items: [
+            {
+                title: "Title",
+                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
+                titleVisible: true,
+                descriptionVisible: true,
+                titleId: "",
+                descriptionId: "",
+                cardId: "tnc-card-0",
+                visible: true
+            }
+        ]
+    },
     "hero-terra-banner": {
         title: "Title",
         subtitle: "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
@@ -185,6 +200,66 @@ export const componentDefaults = {
         imageTargetDialogId: "",
         imageAutoplay: true
     },
+    "feature-column": {
+        title: "title",
+        titleVisible: true,
+        items: [
+            {
+                title: "Feature Title",
+                description: "Feature Description",
+                buttonText: "Label",
+                buttonUrl: "",
+                buttonVisible: true,
+                buttonLinkType: "url",
+                buttonIconLeft: "",
+                buttonIconRight: "",
+                buttonTargetDialogId: "",
+                buttonId: "fc-link-0",
+                cardId: "fc-card-0",
+                visible: true,
+                titleVisible: true,
+                descriptionVisible: true,
+                titleId: "",
+                descriptionId: ""
+            },
+            {
+                title: "Feature Title",
+                description: "Feature Description",
+                buttonText: "Label",
+                buttonUrl: "",
+                buttonVisible: true,
+                buttonLinkType: "url",
+                buttonIconLeft: "",
+                buttonIconRight: "",
+                buttonTargetDialogId: "",
+                buttonId: "fc-link-1",
+                cardId: "fc-card-1",
+                visible: true,
+                titleVisible: true,
+                descriptionVisible: true,
+                titleId: "",
+                descriptionId: ""
+            },
+            {
+                title: "Feature Title",
+                description: "Feature Description",
+                buttonText: "Label",
+                buttonUrl: "",
+                buttonVisible: true,
+                buttonLinkType: "url",
+                buttonIconLeft: "",
+                buttonIconRight: "",
+                buttonTargetDialogId: "",
+                buttonId: "fc-link-2",
+                cardId: "fc-card-2",
+                visible: true,
+                titleVisible: true,
+                descriptionVisible: true,
+                titleId: "",
+                descriptionId: ""
+            }
+        ]
+    },
     "dialog-item-list": {
         title: "Title",
         description: "Description",
@@ -228,6 +303,7 @@ export const componentDefaults = {
         whatsappVisible: true,
         genderVisible: true,
         dobVisible: true,
+        interestPromoVisible: true,
         nameFieldId: "name-field",
         emailFieldId: "email-field",
         whatsappFieldId: "whatsapp-field",
@@ -254,6 +330,7 @@ export const componentDefaults = {
         whatsappVisible: true,
         genderVisible: true,
         dobVisible: true,
+        interestPromoVisible: true,
         marketingConsentVisible: true,
         collectionConsentVisible: true,
         nameFieldId: "name-field",
@@ -633,4 +710,61 @@ export const componentDefaults = {
         aspectRatio: "9-16",
         imageShowStroke: false
     },
+    "image-carousel": {
+        items: [
+            {
+                image: "https://space.lunaaar.site/assets-lunar/placeholder.svg",
+                imageId: "carousel-image-0",
+                imageUrl: "",
+                imageLinkType: "url",
+                imageTargetDialogId: "",
+                title: "title 1",
+                description: "description 1",
+                buttonText: "Label",
+                buttonUrl: "",
+                buttonVisible: true,
+                buttonLinkType: "url",
+                buttonTargetDialogId: "",
+                buttonId: "carousel-btn-0",
+                cardId: "carousel-card-0",
+                visible: true
+            },
+            {
+                image: "https://space.lunaaar.site/assets-lunar/placeholder.svg",
+                imageId: "carousel-image-1",
+                imageUrl: "",
+                imageLinkType: "url",
+                imageTargetDialogId: "",
+                title: "title 2",
+                description: "description 2",
+                buttonText: "Label",
+                buttonUrl: "",
+                buttonVisible: true,
+                buttonLinkType: "url",
+                buttonTargetDialogId: "",
+                buttonId: "carousel-btn-1",
+                cardId: "carousel-card-1",
+                visible: true
+            },
+            {
+                image: "https://space.lunaaar.site/assets-lunar/placeholder.svg",
+                imageId: "carousel-image-2",
+                imageUrl: "",
+                imageLinkType: "url",
+                imageTargetDialogId: "",
+                title: "title 3",
+                description: "description 3",
+                buttonText: "Label",
+                buttonUrl: "",
+                buttonVisible: true,
+                buttonLinkType: "url",
+                buttonTargetDialogId: "",
+                buttonId: "carousel-btn-2",
+                cardId: "carousel-card-2",
+                visible: true
+            }
+        ],
+        autoScroll: false,
+        autoScrollEffect: "slide"
+    }
 };

@@ -1,9 +1,9 @@
-export default function SpacingMedium({ sectionId }) {
+export default function SpacingSmall({ sectionId }) {
     return (
         <div
             id={sectionId}
             style={{
-                height: "var(--padding-lg)",
+                height: "var(--padding-sm)",
                 width: "100%"
             }}
         />

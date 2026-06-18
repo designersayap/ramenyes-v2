@@ -6,36 +6,34 @@
 
 
 
-
-
 :root {
 
     /* Font Variables */
     --font-heading: var(--font-poppins), sans-serif;
-    --font-body: var(--font-lato), sans-serif;
+    --font-body: var(--font-poppins), sans-serif;
 
     /* Brand Colors */
-    --brand-color-500: #0B582B;
-    --brand-color-400: #0D6531;
-    --brand-color-300: #129046;
-    --brand-color-200: #3AA365;
-    --brand-color-100: #76BF94;
-    --brand-color-75: #9ED1B3;
-    --brand-color-50: #E6F1EB;
+    --brand-color-500: #1B133D;
+    --brand-color-400: #2B1E61;
+    --brand-color-300: #3A2985;
+    --brand-color-200: #7063AD;
+    --brand-color-100: #A89FDB;
+    --brand-color-75: #D5D1F0;
+    --brand-color-50: #F3F2FD;
 
     /* System Colors */
-    --system-color-green-500: #0B582B;
-    --system-color-green-300: #129046;
-    --system-color-green-50: #EAF7F0FF;
-    --system-color-blue-500: #124191FF;
-    --system-color-blue-300: #1E6AEDFF;
-    --system-color-blue-50: #E9EBF8FF;
-    --system-color-yellow-500: #9C8800FF;
-    --system-color-yellow-300: #FFDF00FF;
-    --system-color-yellow-50: #FFFCE6FF;
-    --system-color-red-500: #832524FF;
-    --system-color-red-300: #D93B3BFF;
-    --system-color-red-50: #FBEBEBFF;
+    --system-color-green-500: #3A2985;
+    --system-color-green-300: #3A2985;
+    --system-color-green-50: #F3F2FD;
+    --system-color-blue-500: #3A2985;
+    --system-color-blue-300: #3A2985;
+    --system-color-blue-50: #F3F2FD;
+    --system-color-yellow-500: #3A2985;
+    --system-color-yellow-300: #3A2985;
+    --system-color-yellow-50: #F3F2FD;
+    --system-color-red-500: #3A2985;
+    --system-color-red-300: #3A2985;
+    --system-color-red-50: #F3F2FD;
 
     /* Border Radius */
     --round-80: 12px;
@@ -123,18 +121,18 @@
        ============================================ */
 
     /* Typography */
-    --brand-typography-title: var(--brand-color-300);
+    --brand-typography-title: linear-gradient(90deg, #F1C750 0%, #F1C750 16%, white 43%, #F1C750 100%);
     --default-typography-title: var(--grey-500);
-    --brand-typography-body: var(--grey-400);
+    --brand-typography-body: var(--brand-color-500);
     --default-typography-body: var(--grey-400);
     --brand-typography-caption: var(--grey-300);
     --default-typography-caption: var(--grey-300);
 
     /* Stroke */
     --stroke-default: var(--grey-100);
-    --stroke-typography-title: transparent;
-    --stroke-typography-body: transparent;
-    --stroke-container: var(--base-white);
+    --stroke-typography-title: var(--brand-color-400);
+    --stroke-typography-body: var(--brand-color-400);
+    --stroke-container: transparent;
 
     /* Button */
     --text--primary-button: var(--base-white);

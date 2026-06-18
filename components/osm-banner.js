@@ -70,7 +70,13 @@ const BuilderButton = ({ label, href, className, style, children, linkType, targ
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   let finalId = id || (normalizedSectionId && suffix ? normalizedSectionId + '-' + suffix : undefined);
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
-  const renderIcon = (icon) => icon;
+  const renderIcon = (icon) => {
+    if (typeof icon === 'string' && typeof Icons !== 'undefined' && Icons[icon]) {
+      const IconComponent = Icons[icon];
+      return <IconComponent style={{ width: '1.25rem', height: '1.25rem' }} />;
+    }
+    return typeof icon === 'string' ? null : icon;
+  };
   const isSimpleLabel = label && typeof label === 'string' && !/<[a-z]|&[a-z0-9#]+;/i.test(label);
   const content = (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', gap: 'inherit' }}>

@@ -1,4 +1,5 @@
 "use client";
+import * as Icons from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import styles from "./footer-omnichannel.module.css";
 import { componentDefaults } from "./data";
@@ -69,16 +70,23 @@ const BuilderLink = ({ label, href, className, style, children, linkType, target
   const normalizedSectionId = (sectionId && typeof sectionId === 'string') ? sectionId.replace(/-+$/, '') : '';
   let finalId = id || (normalizedSectionId && suffix ? normalizedSectionId + '-' + suffix : undefined);
   finalId = finalId ? finalId.replace(/-+/g, '-') : undefined;
+  const renderIcon = (icon) => {
+    if (typeof icon === 'string' && typeof Icons !== 'undefined' && Icons[icon]) {
+      const IconComponent = Icons[icon];
+      return <IconComponent style={{ width: '1.25rem', height: '1.25rem' }} />;
+    }
+    return typeof icon === 'string' ? null : icon;
+  };
   const isSimpleLabel = label && typeof label === 'string' && !/<[a-z]|&[a-z0-9#]+;/i.test(label);
   const content = (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: justify || 'center', width: '100%', height: '100%', gap: 'inherit' }}>
-         {iconLeft && <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>{iconLeft}</span>}
+         {renderIcon(iconLeft) && <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>{renderIcon(iconLeft)}</span>}
           {!hideLabel && (
               <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', justifyContent: justify || 'center' }}>
                  {isSimpleLabel ? label : (label && typeof label === 'string' ? <span dangerouslySetInnerHTML={{ __html: label }} /> : (label || children))}
               </div>
           )}
-         {iconRight && <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>{iconRight}</span>}
+         {renderIcon(iconRight) && <span style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>{renderIcon(iconRight)}</span>}
       </div>
   );
   if (linkType === 'dialog' && targetDialogId) {
@@ -284,12 +292,23 @@ export default function FooterOmnichannel({
                                                 <div style={{ width: 16, height: 16, position: 'relative', overflow: 'hidden' }}>
                                                     <BuilderImage
                                                         src={link.image}
+                                                        onSrcChange={(val) => {
+                                                            const newLinks = [...findUsOnLinks];
+                                                            newLinks[index].image = val;
+                                                            update('findUsOnLinks')(newLinks);
+                                                        }}
                                                         id={link.imageId}
+                                                        onIdChange={(val) => {
+                                                            const newLinks = [...findUsOnLinks];
+                                                            newLinks[index].imageId = val;
+                                                            update('findUsOnLinks')(newLinks);
+                                                        }}
                                                         sectionId={sectionId}
                                                         suffix={`available-at-icon-${index}`}
                                                         className="object-cover"
                                                         style={{ width: '100%', height: '100%' }}
                                                         showLinkControls={false}
+                                                        showStrokeToggle={false}
                                                     />
                                                 </div>
                                             }
@@ -331,12 +350,23 @@ export default function FooterOmnichannel({
                                                 <div style={{ width: 16, height: 16, position: 'relative', overflow: 'hidden' }}>
                                                     <BuilderImage
                                                         src={link.image}
+                                                        onSrcChange={(val) => {
+                                                            const newLinks = [...socialLinks];
+                                                            newLinks[index].image = val;
+                                                            update('socialLinks')(newLinks);
+                                                        }}
                                                         id={link.imageId}
+                                                        onIdChange={(val) => {
+                                                            const newLinks = [...socialLinks];
+                                                            newLinks[index].imageId = val;
+                                                            update('socialLinks')(newLinks);
+                                                        }}
                                                         sectionId={sectionId}
                                                         suffix={`social-icon-${index}`}
                                                         className="object-cover"
                                                         style={{ width: '100%', height: '100%' }}
                                                         showLinkControls={false}
+                                                        showStrokeToggle={false}
                                                     />
                                                 </div>
                                             }

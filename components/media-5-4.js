@@ -1,7 +1,8 @@
 "use client";
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useState, useEffect, useRef } from "react";
-import styles from "./media-grid-col-2.module.css";
+import styles from "./media.module.css";
+const DEFAULT_PLACEHOLDER_IMAGE = "";
 import { componentDefaults } from "./data";
 import { createUpdateHandler } from "./component-helpers";
 
@@ -157,70 +158,26 @@ const BuilderImage = ({ src, mobileSrc, alt, className, style, mobileRatio, href
   return <div ref={wrapperRef} className={baseClassName} style={wrapperStyle}>{mediaContent}</div>;
 };
 
-export default function MediaGridCol2({
-    images: rawImages = componentDefaults["media-grid-col-2"].images,
+export default function Media5x4({
+    image = componentDefaults["media-5-4"].image,
+    imageId,
+    imageVisible,
     onUpdate,
     sectionId,
     fullWidth,
-    hasFloatingEffect = componentDefaults["media-grid-col-2"].hasFloatingEffect,
-    aspectRatio = componentDefaults["media-grid-col-2"].aspectRatio,
-    autoScroll = componentDefaults["media-grid-col-2"].autoScroll,
-    autoScrollEffect = componentDefaults["media-grid-col-2"].autoScrollEffect,
-    marqueeDuration = componentDefaults["media-grid-col-2"].marqueeDuration,
-    marqueeDirection = componentDefaults["media-grid-col-2"].marqueeDirection,
-    imageShowStroke = componentDefaults["media-grid-col-2"].imageShowStroke
+    removePaddingLeft,
+    removePaddingRight,
+    imageUrl,
+    imageLinkType,
+    imageTargetDialogId,
+    imageIsPortrait,
+    imageMobileRatio,
+    imageMobileSrc,
+    imageEnableAudio,
+    imageAutoplay = componentDefaults["media-5-4"].imageAutoplay,
+    imageShowStroke
 }) {
-    // Sanitize data
-    const images = (rawImages || []).filter(item => item !== null && typeof item === 'object');
-
-    const [isVisible, setIsVisible] = useState(false);
-    const containerRef = useRef(null);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                    observer.disconnect();
-                }
-            },
-            { threshold: 0.1 }
-        );
-
-        if (containerRef.current) {
-            observer.observe(containerRef.current);
-        }
-
-        return () => observer.disconnect();
-    }, []);
-
-    const handleUpdateImage = (index, key, value) => {
-        const newImages = [...images];
-        newImages[index] = { ...newImages[index], [key]: value };
-        onUpdate({ images: newImages });
-    };
-
-    // Filter only visible images for the layout
-    const visibleImages = images.map((img, i) => ({ ...img, originalIndex: i }))
-        .filter(img => img && img.visible !== false);
-
-    const isAutoScroll = autoScroll === true || autoScroll === "true";
-    const isMarquee = isAutoScroll && autoScrollEffect === "marquee";
-    const [isPaused, setIsPaused] = useState(false);
-
-    // For marquee, we need enough items to fill the screen for a seamless loop
-    const displayItems = [];
-    let repeatCount = 1;
-
-    if (isMarquee && visibleImages.length > 0) {
-        // Aim for enough items to ensure no gaps during animation
-        repeatCount = Math.max(3, Math.ceil(12 / visibleImages.length));
-        for (let i = 0; i < repeatCount; i++) {
-            displayItems.push(...visibleImages);
-        }
-    } else {
-        displayItems.push(...visibleImages);
-    }
+    const update = createUpdateHandler(onUpdate);
 
     return (
         <BuilderSection
@@ -229,61 +186,33 @@ export default function MediaGridCol2({
             innerContainer={true}
             sectionId={sectionId}
             fullWidth={fullWidth}
-            showFullWidthControl={false}
-            showFloatingToggle={true}
-            hasFloatingEffect={hasFloatingEffect}
-            aspectRatio={aspectRatio}
-            autoScroll={isAutoScroll}
-            autoScrollEffect={autoScrollEffect}
-            marqueeDuration={marqueeDuration}
-            marqueeDirection={marqueeDirection}
-            imageShowStroke={imageShowStroke}
+            removePaddingLeft={removePaddingLeft}
+            removePaddingRight={removePaddingRight}
         >
-            <div
-                ref={containerRef}
-                className={`${styles.mediaGrid} ${isVisible ? styles.animated : ""} ${isMarquee ? styles.marquee : ""}`}
-                onMouseEnter={() => isMarquee && setIsPaused(true)}
-                onMouseLeave={() => isMarquee && setIsPaused(false)}
-                data-paused={isPaused}
-                data-direction={marqueeDirection}
-                style={{
-                    '--marquee-repeat-count': repeatCount,
-                    '--marquee-duration': `${marqueeDuration || 60}s`
-                }}
-            >
-                {displayItems.map((item, index) => (
-                    <div
-                        key={`${item.cardId || index}-${index}`}
-                        className={`${styles.itemWrapper} ${isVisible ? (hasFloatingEffect ? (index % 2 === 0 ? "animate-bounce-and-float" : "animate-bounce-and-float-alt") : "animate-bounce-in-down") : ""}`}
-                        style={{ 
-                            animationDelay: (isVisible && !isMarquee) ? `${index * 0.15}s` : "0s"
-                        }}
-                    >
-                        <div 
-                            className={styles.imageWrapper} 
-                            style={{ aspectRatio: aspectRatio ? aspectRatio.replace('-', ' / ') : 'auto' }}
-                        >
-                            <BuilderImage
-                                src={item.image}
-                                className={styles.image}
-                                id={item.cardId}
-                                sectionId={sectionId}
-                                isVisible={item.visible}
-                                suffix={`image-${item.originalIndex}`}
-                                href={item.imageUrl}
-                                linkType={item.imageLinkType}
-                                targetDialogId={item.imageTargetDialogId}
-                                isPortrait={item.imageIsPortrait}
-                                mobileRatio={item.imageMobileRatio}
-                                showMobileRatio={false}
-                                enableAudio={item.imageEnableAudio}
-                                autoplay={item.imageAutoplay}
-                                showStroke={imageShowStroke}
-                            />
-                        </div>
+            <div className="grid">
+                <div className="col-mobile-4 col-tablet-8 col-desktop-12">
+                    <div className="imageWrapper">
+                        <BuilderImage
+                            src={image}
+                            className={`${styles.image} imagePlaceholder-5-4 object-cover`}
+                            id={imageId}
+                            sectionId={sectionId}
+                            isVisible={imageVisible}
+                            suffix="image"
+                            href={imageUrl}
+                            linkType={imageLinkType}
+                            targetDialogId={imageTargetDialogId}
+                            isPortrait={imageIsPortrait} // Only allow portrait toggle if mobile ratio is not set
+                            mobileRatio={imageMobileRatio}
+                            mobileSrc={imageMobileSrc}
+                            onMobileSrcChange={update('imageMobileSrc')}
+                            enableAudio={imageEnableAudio}
+                            autoplay={imageAutoplay}
+                            showStroke={imageShowStroke}
+                        />
                     </div>
-                ))}
+                </div>
             </div>
-        </BuilderSection>
+        </BuilderSection >
     );
 }

@@ -1,0 +1,45 @@
+.section {
+    padding-top: var(--padding-2xl);
+    padding-bottom: var(--padding-2xl);
+}
+
+.itemGroup {
+    margin-bottom: var(--gap-lg);
+}
+
+.itemGroup:last-child {
+    margin-bottom: 0;
+}
+
+.cardStyle {
+    background-color: var(--background-neutral--default);
+    padding: var(--padding-md);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow--md);
+    border: 1px solid var(--stroke--primary-button);
+}
+
+.title {
+    /* Gradient Typography Support */
+    background: var(--content-neutral--title);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    filter: drop-shadow(1px 1px 0 var(--stroke-content--title)) drop-shadow(1px -1px 0 var(--stroke-content--title)) drop-shadow(-1px 1px 0 var(--stroke-content--title)) drop-shadow(-1px -1px 0 var(--stroke-content--title)) drop-shadow(1px 0 0 var(--stroke-content--title)) drop-shadow(-1px 0 0 var(--stroke-content--title)) drop-shadow(0 1px 0 var(--stroke-content--title)) drop-shadow(0 -1px 0 var(--stroke-content--title));
+    caret-color: var(--content-neutral--body);
+    margin-bottom: var(--gap-xs);
+}
+
+.title span[style*="color"] {
+    -webkit-text-fill-color: initial !important;
+    background: none !important;
+}
+
+.description {
+    color: var(--content-neutral--body);
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
