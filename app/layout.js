@@ -14,16 +14,16 @@ const poppins = localFont({
 
 
 export const metadata = {
-  title: "Ramenyes",
+  title: "Soklin Liquid ramenyes",
   description: "A premium web experience built with Lunar.",
   robots: { index: true, follow: true },
-
+  
   icons: { icon: "#" },
-
+  
   openGraph: {
-
-
-
+    
+    
+    
   },
 };
 
@@ -37,13 +37,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${poppins.variable}`}>
       <head>
-        <title>Soklin Liquid Ramenyes</title>
+        <title>Soklin Liquid ramenyes</title>
         <meta name="description" content="A premium web experience built with Lunar." />
         <meta name="robots" content="index,follow" />
-
-
-
-
+        
+        
+        
+        
 
         {/* Preconnect to Font domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -52,20 +52,20 @@ export default function RootLayout({ children }) {
         {/* LCP Preload (Up to 2 candidates detected) */}
         <link rel="preload" as="image" href="https://space.lunaaar.site/assets-ramenyes/logo_ramen_yes.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="https://space.lunaaar.site/assets-ramenyes/headline_5_4.webp" fetchPriority="high" />
-
+        
 
       </head>
       <body>
         {children}
-
+        
         {/* Analytics Scripts */}
+        
 
+        
 
+        
 
-
-
-
-
+        
       </body>
     </html>
   );
